@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<WixLocalization Culture="ru-ru" xmlns="http://schemas.microsoft.com/wix/2006/localization" Codepage='1251'>
+
+    <!-- Cactus package and components description -->
+
+    <String Id="Manufacturer">MFCOM LLC</String>
+    <String Id="PackageDescription">Установка серверной части TimeGuard</String>
+    <String Id="PackageComments">Пакет предназначен для установки серверной части ПО TimeGuard</String>
+    <String Id="ProductFeatureTitle">Сервер TimeGuard</String>
+    <String Id="ProductFeatureDescription">Серверная часть ПО TimeGuard</String>
+
+    <String Id="WebContentTitle">Пользовательский интерфейс</String>
+    <String Id="WebContentDescription">Веб-приложение, для настройки расписания проверки сотрудников, просмотра статистики и других операций</String>
+
+    <String Id="CreateDBTitle">Создание БД</String>
+    <String Id="CreateDBDescription">База данных для накопления статистики об активности сотрудников. Создание БД необходимо только при установке продукта впервые.</String>
+
+    <String Id="ShortcutTitle">TimeGuard</String>
+    <String Id="ShortcutDescription">TimeGuard</String>
+    <String Id="ShortcutPasswordsTitle">Пароли</String>
+
+    <!-- Dialog boxes -->
+
+    <String Id="LicenseInformationCaption">Информация о лицензии</String>
+    <String Id="LicenseInformationSuggestion">Укажите следующую информацию для определения лицензии</String>
+    <String Id="LicenseNumber">Номер лицензии</String>
+    <String Id="LicenseKey">Код активации</String>
+
+    <String Id="AuthDataCaption">Имя входа и пароль</String>
+    <String Id="AuthDataSuggestion">Придумайте имя входа и пароль для работы с программой</String>
+    <String Id="AuthDataLogin">Имя входа</String>
+    <String Id="AuthDataPassword">Пароль</String>
+    <String Id="YouHaveToCreatePasswordByYourself">Вы должны придумать пароль</String>
+    <String Id="UserPasswordDescription">Пароль должен содержать не менее 6 символов, не содержать пробелов и не быть совпадать с именем пользователя</String>
+    <String Id="SavePasswordToFile">Сохранить пароли в файле password.txt в каталоге установки?</String>
+
+    <String Id="AccountCaption">Учетная запись Windows</String>
+    <String Id="AccountSuggestion">Придумайте имя пользователя и пароль учетной записи Windows, от имени которой будет работать программа.</String>
+    <String Id="AccountExists">Если для этой цели ранее была создана учетная запись, укажите ее имя и пароль</String>
+    <String Id="AccountLogin">Имя пользователя</String>
+    <String Id="AccountPassword">Пароль</String>
+    <String Id="AccountDescription">К создаваемой учётной записи будут применены требования локальной политики безопасности</String>
+
+    <String Id="IPAddress">Укажите ip-адрес для этого сервера TimeGuard</String>
+    <String Id="IPAddressDescription">Вы всегда сможете изменить это значение позже. Для получения инструкций обратитесь к соответствующему разделу помощи.</String>
+    <String Id="CreateWindowsFirewallRule">Создать правило для Windows Firewall</String>
+
+    <String Id="InstanceName">Имя компьютера и экземпляра БД</String>
+
+    <String Id="EncryptWebConfig">Шифровать важную информацию в файле web.config</String>
+
+    <!-- System messages -->
+    
+    <String Id="PrereqNetFramework40">Это приложение требует .NET Framework 4.0. Пожалуйста, установите .NET Framework 4.0 после чего запустите установку снова.</String>
+    <String Id="PrereqIIS">Это приложение требует Internet Information Services (IIS). Пожалуйста, установите IIS после чего запустите установку снова.</String>
+    <String Id="PrereqMSSQL2008">Это приложение требует Microsoft SQL Server 2008 R2. Пожалуйста, установите Microsoft SQL Server 2008 после чего запустите установку снова.</String>
+    <String Id="PrereqOS">Данная версия Windows не поддерживается. Используйте Windows XP SP3 или выше.</String>
+    <String Id="Example">Пример</String>
+    <String Id="AdminRightsDetectionFailed">Пользователь должен иметь права администратора</String>
+
+    <String Id="NoDowngrade">Уже установлена более новая серверная версия TimeGuard</String>
+
+    <!-- Others -->
+    <String Id="LicenseRtf" Overridable="yes">License.rtf</String>
+
+    <String Id="ProductLanguage">1049</String>
+    <String Id="ProductCodepage">1251</String>
+    <String Id="SummaryCodepage">1251</String>
+
+</WixLocalization>

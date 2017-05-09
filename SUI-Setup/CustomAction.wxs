@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+    <Fragment>
+        <Binary Id="SUI_CA.dll"
+            SourceFile="$(var.SUI-CustomAction.TargetDir)$(var.SUI-CustomAction.TargetName).CA.dll" />
+
+        <CustomAction Id="CheckLicense_CustomAction" BinaryKey="SUI_CA.dll"
+            DllEntry="CheckLicense" Execute="immediate">
+        </CustomAction>
+
+        <CustomAction Id="TryToUpdate_CustomAction" BinaryKey="SUI_CA.dll"
+            DllEntry="TryToUpdate" Execute="immediate">
+        </CustomAction>
+
+        <CustomAction Id="SetDefaultIPAddress_CustomAction" BinaryKey="SUI_CA.dll"
+            DllEntry="SetDefaultIpAddress" Execute="immediate">
+        </CustomAction>
+
+        <CustomAction Id="GetInternalAddress_CustomAction" BinaryKey="SUI_CA.dll"
+            DllEntry="GetInternalAddress" Execute="immediate">
+        </CustomAction>
+
+		<CustomAction Id="GetPort_CustomAction" BinaryKey="SUI_CA.dll"
+			DllEntry="GetPort" Execute="immediate">
+		</CustomAction>
+
+        <CustomAction Id="ActivateLicense_CustomAction" BinaryKey="SUI_CA.dll"
+            DllEntry="ActivateLicense" Execute="immediate">
+        </CustomAction>
+
+        <CustomAction Id="WritePasswords_CustomAction" BinaryKey="SUI_CA.dll"
+            DllEntry="WritePasswordFile" Execute="immediate">
+        </CustomAction>
+
+        <CustomAction Id="SetXmlConfigFileName_CustomAction" BinaryKey="SUI_CA.dll"
+            DllEntry="SetXmlConfigFileName" Execute="immediate">
+        </CustomAction>
+
+		<CustomAction Id="GetPasswordHash_CustomAction" BinaryKey="SUI_CA.dll" DllEntry="CreateLogin" Execute="immediate" />
+    </Fragment>
+</Wix>

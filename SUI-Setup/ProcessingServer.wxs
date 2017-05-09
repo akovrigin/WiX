@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
+     xmlns:util="http://schemas.microsoft.com/wix/UtilExtension"
+	 xmlns:fwall="http://schemas.microsoft.com/wix/FirewallExtension">
+    <Fragment>
+
+        <!-- Get stored IP address from registry if there was previous version of software-->
+        <Property Id="STORED_IP_ADDRESS">
+            <RegistrySearch Id="IPAddressRegistry"
+                    Root="HKCU"
+                    Key="Software\MFCOM LLC"
+                    Name="ProcessingServerAddress"
+                    Type="raw"
+                    />
+        </Property>
+
+        <!-- Значение записывается только при условии SELFFOUND, поэтому выделено в отдельный компонент -->
+        <DirectoryRef Id="ManufacturerFolder">
+            <Directory Id='FakeFolder1' Name='TimeGuard Processing Server'>
+                <Component Id="RegistryEntries" Guid="{9A73AFE9-B407-4036-BE7A-B75FF35999F2}" Permanent="yes">
+                    <RegistryKey Root="HKCU"
+                            Key="Software\MFCOM LLC"
+                            Action="create">
+                        <RegistryValue Id="ProcessingServerAddress" Type="string" Name="ProcessingServerAddress" Value="[CURRENT_IP_ADDRESS]"/>
+                    </RegistryKey>
+                    <Condition>SELFFOUND</Condition>
+                </Component>
+            </Directory>
+        </DirectoryRef>
+
+        <!-- If software is installing first time -->
+        <DirectoryRef Id="ManufacturerFolder">
+            <Directory Id='FakeFolder2' Name='TimeGuard Processing Server'>
+                <Component Id="ModifyInstalledConfigComponent" KeyPath="yes" Guid="{0DE211E9-8D3E-49CA-9914-C940F899DEE1}">
+                    <util:XmlFile Id="ModifyConfig"
+                         Action="setValue"
+                         Permanent="yes"
+                         File="[#ProcessingServer_config]"
+                         ElementPath="/configuration/appSettings/add[\[]@key='IpAddress'[\]]"
+                         Name="value"
+                         Value="[InternalAddress]"
+                         SelectionLanguage="XSLPattern"
+                         Sequence="1" />
+                    <Condition>NOT Installed</Condition>
+                </Component>
+            </Directory>
+        </DirectoryRef>
+
+        <!-- If software is reinstalling and IP address was gotten from config-file -->
+        <DirectoryRef Id="ManufacturerFolder">
+            <Directory Id='FakeFolder3' Name='TimeGuard Processing Server'>
+                <Component Id="ModifyReinstalledConfigComponent" KeyPath="yes" Guid="{6AC73F6F-7F8B-47E0-8A1E-86A13ABC2202}">
+                    <util:XmlFile Id="SetPrevIpAddressInConfig"
+                         Action="setValue"
+                         Permanent="yes"
+                         File="[#ProcessingServer_config]"
+                         ElementPath="/configuration/appSettings/add[\[]@key='IpAddress'[\]]"
+                         Name="value"
+                         Value="[CURRENT_IP_ADDRESS]"
+                         SelectionLanguage="XSLPattern"
+                         Sequence="1" />
+					<Condition>SELFFOUND</Condition>
+				</Component>
+			</Directory>
+        </DirectoryRef>
+
+		<DirectoryRef Id="ManufacturerFolder">
+			<Directory Id='FakeFolder6' Name='TimeGuard Processing Server'>
+				<Component Id="ModifyReinstalledConfigComponent2" KeyPath="yes" Guid="{6AC73F6F-7F8B-47E0-8A1E-86A1ffffffff}">
+					<util:XmlFile Id="SetIpPortInConfig"
+                         Action="setValue"
+                         Permanent="yes"
+                         File="[#ProcessingServer_config]"
+                         ElementPath="/configuration/appSettings/add[\[]@key='Port'[\]]"
+                         Name="value"
+                         Value="[ProcessingPort]"
+                         SelectionLanguage="XSLPattern"
+                         Sequence="1" />
+					<Condition>NOT installed</Condition>
+				</Component>
+			</Directory>
+		</DirectoryRef>		
+        <DirectoryRef Id="ManufacturerFolder">
+            <Directory Id='ProcessingServerFolder' Name='TimeGuard Processing Server'>
+
+                <Component Id="ProcessingServerComponent" Guid="{0C68BE72-32AC-4C14-AB6F-06363877EC80}">
+
+                    <File Id="ProcessingServer_exe" Name="ProcessingServer.exe" KeyPath="yes" Checksum="yes"
+                          Source="C:\Temp\Secure_ProcessingServer\ProcessingServer.exe"/>
+                    <ServiceInstall
+                        Id="ProcessingServer_ServiceInstaller"
+                        Name="ProcessingServer"
+                        DisplayName="TimeGuard Processing Service"
+                        Description="Processes incoming data from clients"
+                        Type="ownProcess" Vital="yes" Start="auto" Account="LocalSystem" ErrorControl="normal" Interactive="no">
+                    </ServiceInstall>
+                    <ServiceControl Id="StartService" Start="install" Stop="uninstall" Remove="uninstall" Name="ProcessingServer" Wait="yes" />
+
+                    <File Id="ProcessingServer_config" Source="C:\Projects\cactus-809\Data\Config\ProcessingServer\ProcessingServer.exe.config" Checksum="yes" />
+
+                    <File Id="Zlib_dll" Source="C:\Projects\Common\zlib\zlibnet\zlib.net.dll" Checksum="yes"/>
+
+                    <File Id="ProcessingServer_001" Source="C:\Temp\Secure_ProcessingServer\NetworkServicesLibrary.dll" Checksum="yes"/>
+                    <File Id="ProcessingServer_002" Source="C:\Temp\Secure_ProcessingServer\DhNetImp.dll" Checksum="yes"/>
+                    <File Id="ProcessingServer_003" Source="C:\Temp\Secure_ProcessingServer\InterprocConsts.dll" Checksum="yes"/>
+                    <File Id="ProcessingServer_004" Source="C:\Temp\Secure_ProcessingServer\Logger.dll" Checksum="yes"/>
+                    <File Id="ProcessingServer_005" Source="C:\Temp\Secure_ProcessingServer\LsRas.Access.dll" Checksum="yes"/>
+                    <File Id="ProcessingServer_006" Source="C:\Temp\Secure_ProcessingServer\Mfcom.Cactus.Core.dll" Checksum="yes"/>
+                    <File Id="ProcessingServer_008" Source="C:\Temp\Secure_ProcessingServer\Mfcom.CoreServices.dll" Checksum="yes"/>
+                    <File Id="ProcessingServer_009" Source="C:\Temp\Secure_ProcessingServer\Mfcom.Gzip.Lib.dll" Checksum="yes"/>
+
+                </Component>
+
+            </Directory>
+        </DirectoryRef>
+
+        <!-- Allow firewall exception -->
+        <DirectoryRef Id="ManufacturerFolder">
+            <Directory Id='FakeFolder4' Name='TimeGuard Processing Server'>
+                <Component Id="AllowFirewallException" KeyPath="yes" Guid="{F5F81DA2-CD2C-4341-BE7A-601233B5C693}">
+                    <fwall:FirewallException Id="PsExc1" Name="TimeGuard Processing Server" Program="[#ProcessingServer_exe]" Scope="any" IgnoreFailure="yes"/>
+                    <fwall:FirewallException Id="PsExc2" Name="TimeGuard port exception" Port="80" Scope="any" Protocol="tcp" IgnoreFailure="yes"/>
+                    <Condition>WINDOWS_FIREWALL_RULE = 1 AND NOT Installed</Condition>
+                </Component>
+            </Directory>
+        </DirectoryRef>
+
+    </Fragment>
+</Wix>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
+	 xmlns:iis="http://schemas.microsoft.com/wix/IIsExtension"
+     xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
+
+    <Fragment>
+        <!-- Install to default web site -->
+        <iis:WebSite Id="DefaultWebSite" Description='Default Web Site'>
+            <iis:WebAddress Id="AllUnassigned" Port="80" />
+        </iis:WebSite>
+
+        <!-- Get the ASP.NET DLL path (used for registering script maps below) -->
+        <PropertyRef Id="NETFRAMEWORK40FULLINSTALLROOTDIR"/>
+        <SetProperty Id="ASPNETISAPIDLL" Sequence="execute" Before="ConfigureIIs"
+                     Value="[NETFRAMEWORK40FULLINSTALLROOTDIR]aspnet_isapi.dll" />
+        <SetProperty Id="ASPNETREGIIS" Sequence="execute" Before="ConfigureIIs"
+                     Value="[NETFRAMEWORK40FULLINSTALLROOTDIR]aspnet_regiis.exe" />
+
+        <DirectoryRef Id="TARGETDIR">
+            <Directory Id="WWWROOT" Name="wwwroot">
+
+                <Component Id="Cactus809WebAppPoolCmp" Guid="{90C89981-E244-449F-AD2D-5BE9F79539AE}" Permanent="yes">
+                    <iis:WebAppPool Id="Cactus809AppPool" Name="ASP.NET v4.0 Classic" ManagedRuntimeVersion="v4.0"/>
+                    <!--<iis:WebAppPool Id="Cactus809AppPool" Name="DefaultAppPool" ManagedRuntimeVersion="v4.0"/>-->
+                    
+                    <CreateFolder/>
+                </Component>
+
+                <!-- The component to define the Virtual Directory.-->
+                <Component Id="Cactus809WebVirtualDirCmp" Guid="{CDB616CB-0EE9-4C8E-9137-1014D97CE553}">
+
+                    <!-- Define new App Pool - identity if not set defaults to: ApplicationPoolIdentity -->
+                    <!--<iis:WebAppPool Id="Cactus809AppPool" Name="[WEB_APP_NAME]" ManagedRuntimeVersion="v4.0"-->
+                    <!--   IdleTimeout="0" RecycleMinutes="0" ManagedPipelineMode="integrated">-->
+                    <!--</iis:WebAppPool>-->
+
+                    <iis:WebVirtualDir Id="VDir" Alias="[VIRTUAL_DIR]" Directory="dir_timeguard_0" WebSite="DefaultWebSite">
+                        <!--                        WebSite="SelectedWebSite"-->
+                        <iis:WebApplication Id="Cactus809WebWebApplication" WebAppPool="Cactus809AppPool" Name="[WEB_APP_NAME]" />
+                        <iis:WebDirProperties Id="Cactus809WebVirtDirProperties" DefaultDocuments="Default.aspx"
+                                               AnonymousAccess="yes" BasicAuthentication="no" WindowsAuthentication="no" />
+                        <!--<iis:MimeMap Id="SilverlightMimeType" Extension=".xap" Type="application/x-silverlight-app" />-->
+                    </iis:WebVirtualDir>
+                    <CreateFolder/>
+                    <!-- Need to have to ensure created -->
+                </Component>
+
+                <!-- Configure virtual dir -->
+                <Component Id="EnableASPNet4ExtensionCmp" Permanent="yes" Guid="{CC88D1D4-63D4-4763-B02B-B99D4D017099}">
+                    <CreateFolder/>
+                    <!-- Need to have to ensure created -->
+                    <iis:WebServiceExtension Id="ASPNet4Extension" Group="ASP.NET v4.0.30319" Allow="yes"
+                                             File="[ASPNETISAPIDLL]" Description="ASP.NET v4.0.30319"
+                                             UIDeletable="no"/>
+                </Component>
+
+            </Directory>
+        </DirectoryRef>
+
+        <ComponentGroup Id="Cactus809WebIssConfiguration">
+            <ComponentRef Id="Cactus809WebAppPoolCmp" />
+            <ComponentRef Id="Cactus809WebVirtualDirCmp" />
+            <ComponentRef Id="EnableASPNet4ExtensionCmp" />
+        </ComponentGroup>
+
+    </Fragment>
+</Wix>

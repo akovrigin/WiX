@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--     xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension"-->
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
+	 xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
+
+    <!--For debugging on the target computer use:  msiexec /i [msiname] /l*v [logfilename] -->
+
+    <!-- !!!    DO NOT CHANGE UpgradeCode. You must change ProductCode, PackageCode.    !!! -->
+    <!-- !!!    And do not forget to change version in file client-service.rc           !!! -->
+    <?define UpgradeCode="{20C6A869-5DA0-49C1-80E5-261EFA8CCC87}"?>
+
+    <!-- *** Version 0.9.8 ***
+    <?define ProductCode="{4D90D48B-4D07-4EEA-95D7-F02249C4825F}"?>
+    <?define PackageCode="{E7855586-9F3A-4536-93D4-C2318CA4067C}"?>
+    <?define ProductVersion="0.9.8" ?>
+    -->
+
+    <!-- *** Version 0.9.9 ***
+    <?define ProductCode="{D3C56845-6F51-4477-9D71-991A6E254AEB}"?>
+    <?define PackageCode="{30498289-92A7-4151-AC50-55934778C0D6}"?>
+	 -->
+
+	<!-- *** Version 1.0.1 *** 
+	<?define ProductCode="{7D2DE85E-91EB-4599-B195-1B8FA655552A}"?>
+	<?define PackageCode="{83029458-DFFE-47AE-B698-10359ED74FB3}"?>
+	-->
+
+	<!-- *** Version 1.0.2 *** 
+	<?define ProductCode="{98A8FF96-E7BD-497B-9D62-A18AC0F6366D}"?>
+	<?define PackageCode="{4ABDA562-9A1B-4479-AA69-ED6816542825}"?>
+	-->
+
+	<!-- *** Version 1.0.4 *** 
+	<?define ProductCode="{AC16E3DC-46C7-46EA-9B22-26724CDA9389}"?>
+	<?define PackageCode="{966EAECC-F77D-48D3-A42F-1F64FB4CC54A}"?>
+	-->
+	
+	<!-- *** Version 1.0.5 *** 
+	<?define ProductCode="{7FFADF1B-0D01-475B-B368-4676B585FDA2}"?>
+	<?define PackageCode="{E5CE9031-5933-4E9E-BA72-06A5709F0EC7}"?>
+	-->
+
+	<!-- *** Version 1.1.0 *** 
+	<?define ProductCode="{B1D2F759-257E-4350-AB98-07C5716C9B1B}"?>
+	<?define PackageCode="{A8A60AC9-CA06-4A4D-837F-3767FE186A78}"?>
+	-->
+
+	<!-- *** Version 1.2.0 *** -->
+	<?define ProductCode="{C22EA8BB-5618-4BEC-B3C8-47E0C75DA01E}"?>
+	<?define PackageCode="{15636916-CFAC-4E40-9345-692F67D30A57}"?>
+
+	<?define ProductVersion="!(bind.FileVersion.Service_exe)" ?>
+
+    <Product Id="$(var.ProductCode)"
+             UpgradeCode='$(var.UpgradeCode)'
+             Name="TimeGuard" Manufacturer="MFCOM LLC"
+             Version="$(var.ProductVersion)"
+             Language="!(loc.ProductLanguage)"
+             >
+        
+		<Package Id="$(var.PackageCode)"
+                 InstallerVersion="300" Compressed="yes"
+                 Manufacturer="MFCOM LLC"
+                 Description="!(loc.PackageDescription) v.$(var.ProductVersion)"
+                 Comments="!(loc.PackageComments)"
+                 InstallPrivileges="elevated"
+                 SummaryCodepage="!(loc.SummaryCodepage)"
+                 />
+
+        <Upgrade Id="$(var.UpgradeCode)">
+            <UpgradeVersion OnlyDetect="no" Property="SELFFOUND"
+              Minimum="0.9.8" IncludeMinimum="yes"
+              Maximum="$(var.ProductVersion)" IncludeMaximum="yes"/>
+            <UpgradeVersion OnlyDetect="yes" Property="NEWERFOUND"
+              Minimum="$(var.ProductVersion)" IncludeMinimum="no" />
+        </Upgrade>
+
+        <?include ConfigurationInitialize.wxi ?>
+        <?include Conditions.wxi ?>
+
+        <Media Id="1" Cabinet="Cactus809.cab" EmbedCab="yes" CompressionLevel="high" />
+
+		<!-- Иконка, которая будет показываться в форме деинсталляции и прочих системных местах -->
+        <Property Id="ARPPRODUCTICON" Value="cactus809.ico" />
+
+        <!-- *********************************************************************************-->
+        <!-- ****************************** Диалоги установки ********************************-->
+        <!-- *********************************************************************************-->
+
+        <UIRef Id="CactusInstallDialogs" />
+        
+        <!-- *********************************************************************************-->
+        <!-- ***************************** Директория установки ******************************-->
+        <!-- *********************************************************************************-->
+
+        <Directory Id='TARGETDIR' Name='SourceDir'>
+            <Directory Id='ProgramFilesFolder' Name='PFiles'>
+                <Directory Id='ManufacturerFolder' Name='MFCOM LLC'>
+                    <Directory Id="INSTALLLOCATION" Name="TimeGuard Client">
+                        <Component Id="ServiceComponent" Guid="{1B3DCBB6-C368-439D-8C5E-4181995DE428}">
+                            <File Id="Service_exe" Name="service.exe" KeyPath="yes" Checksum="yes"
+                                  Source="c:\projects\cactus-809\client\$(var.Configuration)\service.exe"/>
+							<CreateFolder>
+								<util:PermissionEx User="Everyone" GenericRead="yes" Read="yes" />
+							</CreateFolder>
+						</Component>
+                        <Component Id="ClientComponent" Guid="{06C2C5F6-81E8-4A76-96E0-6F3938784BDE}">
+                            <File Id="ClientUI_exe" Source="c:\projects\cactus-809\ClientUI\$(var.Configuration)\ClientUI.exe" Checksum="yes"/>
+                        </Component>
+						<Component Id="AcdetComponent" Guid="{A1A4689B-64D9-41C9-BCC6-A57DE4EFCE32}">
+							<File Id="Acdet_dll" Source="c:\projects\cactus-809\ActivityDetector\$(var.Configuration)\acdet.dll" Checksum="yes"/>
+						</Component>
+						<Component Id="CpuidsdkComponent" Guid="{2174B8CE-348F-4587-9A37-56C3DD03A68E}">
+                            <File Id="Cpuidsdk_dll" Name="cpuidsdk.dll" KeyPath="yes" Checksum="yes"
+                                  Source="C:\Projects\Common\CPUIDSDK\Bin\cpuidsdk.dll"/>
+                        </Component>
+                    </Directory>
+                </Directory>
+            </Directory>
+        </Directory>
+
+        <DirectoryRef Id="TARGETDIR">
+            <Directory Id='TmpDir' Name='Temp'>
+            </Directory>
+        </DirectoryRef>
+
+        <DirectoryRef Id="TARGETDIR">
+            <!--<Merge Id="VCRedist" SourceFile="C:\Program Files (x86)\Common Files\Merge Modules\Microsoft_VC100_CRT_x86.msm" DiskId="1" Language="0"/>-->
+
+            <!-- После того, как Юра сделает версию не дебажную, можно удалить Microsoft_VC100_DebugCRT_x86.msm-->
+            <Merge Id="VCRedist" SourceFile="c:\projects\cactus-809\ClientSideSetup\Lib\Microsoft_VC100_CRT_x86.msm" DiskId="1" Language="0" />
+			<!--Merge Id="VCRedistDebug" SourceFile="c:\projects\cactus-809\ClientSideSetup\Lib\Microsoft_VC100_DebugCRT_x86.msm" DiskId="1" Language="0" /-->
+        </DirectoryRef>
+
+		<!-- Запись в реестр настроек прокси -->
+		<DirectoryRef Id="TARGETDIR">
+			<Component Id="RegistryEntries" Guid="{84B6BE15-7AB2-43E5-833F-5BB26E57B0E4}" Permanent="yes">
+				<RegistryKey Root="HKLM"
+					Key="Software\MFCOM\TimeGuard"
+                    Action="create">
+					<RegistryValue Id="ProxyLogin" Type="string" Name="ame" Value="[PROXY_LOGIN]" KeyPath="yes"/>
+					<RegistryValue Id="ProxyPassword" Type="string" Name="ord" Value="[PROXY_PASSWORD]"/>
+				</RegistryKey>
+				<Condition>PROXY_EXISTS = 1 AND NOT Installed</Condition>
+			</Component>
+		</DirectoryRef>
+
+
+		<!-- *********************************************************************************-->
+        <!-- **************************** Порядок установки пакета ***************************-->
+        <!-- *********************************************************************************-->
+
+        <Feature Id="ProductFeature" Title="!(loc.ProductFeatureTitle)" Description="!(loc.ProductFeatureDescription)" Level="1" Display="expand" ConfigurableDirectory="INSTALLLOCATION">
+
+            <Feature Id="VCRedist" Title="Visual C++ 2010 Runtime" AllowAdvertise="no" Display="hidden" Level="1">
+                <MergeRef Id="VCRedist"/>
+				<!--MergeRef Id="VCRedistDebug"/-->
+            </Feature>
+
+            <!-- Main content of the Complete feature. -->
+            <Feature Id="ClientContent"
+					 Title="!(loc.ClientContentTitle)"
+					 Description="!(loc.ClientContentDescription)"
+					 Level="1">
+
+                <ComponentRef Id="ServiceComponent" />
+                <ComponentRef Id="ClientComponent" />
+                <ComponentRef Id="CpuidsdkComponent" />
+				<ComponentRef Id="AcdetComponent" />
+				<ComponentRef Id="RegistryEntries" />
+			</Feature>
+        </Feature>
+
+        <InstallExecuteSequence>
+			<Custom Action="PreventDowngrading" After="FindRelatedProducts">NEWERFOUND</Custom>
+			<RemoveExistingProducts After="InstallFinalize" />
+			
+			<!--<Custom Action="CheckLicense_SetDataValue" Before="InstallFiles">NOT Installed</Custom>-->
+			<!--<Custom Action="CheckLicense_CustomAction" Before="CheckLicense_SetDataValue">NOT Installed</Custom>-->
+
+            <Custom Action="RegisterService" After="ActivateService">NOT Installed OR SELFFOUND</Custom>
+            <Custom Action="ActivateService" Before="InstallFinalize">NOT SELFFOUND AND NOT Installed</Custom>
+            <Custom Action="UpdateService" Before="InstallFinalize">SELFFOUND</Custom>
+            <Custom Action="UninstallService" Before="InstallFiles">Installed</Custom>
+        </InstallExecuteSequence>
+
+		<CustomAction Id="PreventDowngrading" Error="Newer version already installed." />
+        <CustomAction Id="RegisterService" FileKey="Service_exe" ExeCommand=' /install' Return='check' Execute='deferred'/>
+        <CustomAction Id="ActivateService" FileKey="Service_exe" ExeCommand=' /transmit /[LICENSE_NUMBER] /[LICENSE_KEY]' Return='check' Execute='deferred'/>
+        <CustomAction Id="UpdateService" FileKey="Service_exe" ExeCommand=' /update' Return='check' Execute='deferred'/>
+        <CustomAction Id="UninstallService" Directory="INSTALLLOCATION" ExeCommand='[INSTALLLOCATION]service.exe /uninstall' Return='check' />
+
+        <Icon Id="cactus809.ico" SourceFile="cactus809.ico" />
+    </Product>
+</Wix>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<WixLocalization Culture="en-us" xmlns="http://schemas.microsoft.com/wix/2006/localization" Codepage='1252'>
+
+    <!-- Cactus package and components description -->
+
+    <String Id="PackageDescription">Client side installation of "Cactus809"</String>
+    <String Id="PackageComments">The package is designed to install client side software, "TimeGuard"</String>
+    <String Id="ClientContentTitle">TimeGuard client</String>
+    <String Id="ClientContentDescription">Application that scans the user activity on the schedule, collect and send statistics to the statistics server</String>
+    <String Id="ProductFeatureTitle">TimeGuard client</String>
+    <String Id="ProductFeatureDescription">Client-side software TimeGuard</String>
+
+    <!-- Dialog boxes -->
+
+    <String Id="LicenseInformationCaption">License Information</String>
+    <String Id="LicenseInformationSuggestion">Enter the following information to personalize your installation</String>
+    <String Id="LicenseNumber">License number</String>
+    <String Id="LicenseKey">Activation code</String>
+
+	<String Id="ProxySettings">Use a proxy server (HTTP)</String>
+	<String Id="ProxyLogin">Login</String>
+	<String Id="YouHaveToUseProxyLogin">Please specify a proxy server user name</String>
+	<String Id="ProxyPassword">Password</String>
+	<String Id="YouHaveToUseProxyPassword">Please specify the user's password</String>
+	<String Id="ProxyDescription">If you are going to connect to the Internet through a proxy server that require a user name and password, please specify this information here.</String>
+
+	<!-- System messages -->
+
+    <String Id="PrereqNetFramework40">This application requires .NET Framework 4.0. Please install the .NET Framework then run this installer again.</String>
+    <String Id="PrereqC2010x86">This application requires Microsoft Visual C++ 2010 Redistributable Package (x86). Please install this package then run this installer again.</String>
+    <String Id="PrereqOS">This version Windows is not supported. Use Windows XP SP3 or higher.</String>
+    <String Id="Example">Example</String>
+    <String Id="AdminRightsDetectionFailed">User have to have administrator privileges.</String>
+
+    <!-- Others -->
+    <String Id="LicenseRtf" Overridable="yes">License-en.rtf</String>
+
+    <String Id="ProductLanguage">1033</String>
+    <String Id="ProductCodepage">1252</String>
+    <String Id="SummaryCodepage">1252</String>
+
+</WixLocalization>

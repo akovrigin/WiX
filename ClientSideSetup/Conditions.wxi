@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Include>
+    <!-- ****************************** Check prerequisites ******************************-->
+
+    <Condition Message='!(loc.PrereqOS)'>(VersionNT = 501 AND ServicePackLevel = 3) OR VersionNT > 501</Condition>
+
+    <!-- Нет смысла проверять, так как инсталлят нужные dll-ки установит -->
+    <!-- Visual C++ 2010 x86 -->
+    <!-- HKLM\SOFTWARE\Microsoft\VisualStudio\10.0\VC\VCRedist\x86-->
+    <!-- HKLM\SOFTWARE\Microsoft\VisualStudio\10.0\VC\VCRedist\x64-->
+    <!-- HKLM\SOFTWARE\Microsoft\VisualStudio\10.0\VC\VCRedist\ia64-->
+    <!--    <Property Id="HASVCPP2010">-->
+    <!--        <RegistrySearch Id="HasVCPP2010Search" Root="HKLM" Key="SOFTWARE\Microsoft\VisualStudio\10.0\VC\VCRedist\x86" Name="Installed" Type="raw" />-->
+    <!--    </Property>-->
+    <!--    <Condition Message="!(loc.PrereqC2010x86)">Installed OR (HASVCPP2010)</Condition>-->
+</Include>

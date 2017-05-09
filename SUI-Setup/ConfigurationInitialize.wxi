@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Include>
+    <!-- Virtual directory in IIS -->
+    <Property Id="VIRTUAL_DIR" Value="TimeGuard" />
+
+    <!-- Web app name (alias) -->
+    <Property Id="WEB_APP_NAME" Value="TimeGuard" />
+
+    <!-- App pool identity properties -->
+    <Property Id="WEB_APP_POOL_IDENTITY_DOMAIN" Value="POOL_DOMAIN" />
+    <Property Id="WEB_APP_POOL_IDENTITY_NAME" Value="account-name" />
+    <Property Id="WEB_APP_POOL_IDENTITY_PWD" Hidden="yes" />
+
+    <Property Id="RIGHT_BRACKET" Value="]" />
+    <Property Id="LEFT_BRACKET" Value="[" />
+
+    <!-- TODO Похоже надо у пользователя запрашивать этот инстанс или как-то его узнавать и предлагать на выбор, если он не один-->
+    <Property Id="SQLINSTANCE" Value="sql2008" />
+    <!--Property Id="SQLSERVER" Value="localhost" / На самом деле, это похоже COMPUTERNAME, но надо уточнить -->
+    <Property Id="DATABASENAME" Value="TimeGuard" />
+	<Property Id="LOGINDATABASE" Value="aspnet-ServerUIv2-20121214134805" />
+
+    <!-- System properties of developer machine. I don't know, maybe it'll be useful for create install actions. -->
+    <Property Id='ROOTDRIVE' Value='$(env.SystemDrive)' />
+    <Property Id='COMPUTERNAME' Value='$(env.ComputerName)' />
+
+    <!-- System properties of targer machine -->
+    <Property Id="MACHINE_NAME">
+        <RegistrySearch	Id="EvsRegistrySearchMachineName"
+                        Root="HKLM"
+                        Type="raw"
+                        Name="Hostname"
+                        Key="SYSTEM\CurrentControlSet\Services\Tcpip\Parameters"/>
+    </Property>
+
+    <!-- Connection String (i don't know why we don't use it in our projects?)-->
+    <Property Id="CONNECTION_STRING" Value="Data Source=|SERVER|;Initial Catalog=|Database name|;User Id=|LOGIN|;Password=|PASSWORD|;Persist Security Info=True" />
+</Include>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+    <Fragment>
+
+        <DirectoryRef Id='TARGETDIR'>
+            <Directory Id="ProgramMenuFolder">
+                <Directory Id="ApplicationProgramsFolder" Name="!(loc.ShortcutTitle)"/>
+            </Directory>
+        </DirectoryRef>
+
+        <DirectoryRef Id="ManufacturerFolder" FileSource="C:\Projects\cactus-809\Data\Config\ServerUIv2\" DiskId="1">
+            <Component Id="ShortcutCactus809" Guid="{7A8E49AD-DDE6-4f82-BC1D-489E2AF2B1CB}">
+                <File Id='ShortcutCactus809File' Name='TimeGuard.url'/>
+            </Component>
+        </DirectoryRef>
+
+        <DirectoryRef Id="ApplicationProgramsFolder">
+            <Component Id="ShortcutCactusUI" Guid="{6B4E7655-297F-44F6-8387-0C5CD40FA7AA}">
+                <Shortcut Id="ShortcutCactusUI"
+                     Name="!(loc.ShortcutTitle)"
+                     Description="!(loc.ShortcutDescription)"
+                     Target="[ManufacturerFolder]TimeGuard.url"
+                     WorkingDirectory="ManufacturerFolder"/>
+                <RemoveFolder Id="ApplicationProgramsFolder" On="uninstall"/>
+                <RegistryValue Root="HKCU"
+                     Key="Software\!(loc.Manufacturer)\!(loc.ProductFeatureTitle)"
+                       Name="installed"
+                       Type="integer"
+                       Value="1"
+                       KeyPath="yes"/>
+
+                <Shortcut Id="ShortcutPassword"
+                        Name="!(loc.ShortcutPasswordsTitle)"
+                        Description="!(loc.ShortcutPasswordsTitle)"
+                        Target="[ProcessingServerFolder]passwords.txt"
+                        WorkingDirectory="ProcessingServerFolder"/>
+
+            </Component>
+        </DirectoryRef>
+
+    </Fragment>
+</Wix>

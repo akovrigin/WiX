@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Copyright (c) Microsoft Corporation.  All rights reserved.
+    
+    The use and distribution terms for this software are covered by the
+    Common Public License 1.0 (http://opensource.org/licenses/cpl1.0.php)
+    which can be found in the file CPL.TXT at the root of this distribution.
+    By using this software in any fashion, you are agreeing to be bound by
+    the terms of this license.
+    
+    You must not remove this notice, or any other, from this software.
+-->
+<!--
+First-time install dialog sequence:
+- WixUI_WelcomeDlg
+- WixUI_LicenseAgreementDlg
+- WixUI_SetupTypeDlg
+- WixUI_VerifyReadyDlg
+- WixUI_CustomizeDlg
+- WixUI_DiskCostDlg
+- WixUI_BrowseDlg
+
+Maintenance dialog sequence:
+- WixUI_MaintenanceWelcomeDlg
+- WixUI_MaintenanceTypeDlg
+- WixUI_CustomizeDlg
+- WixUI_VerifyReadyDlg
+
+Patch dialog sequence:
+ - WixUI_WelcomeDlg
+ - WixUI_VerifyReadyDlg
+-->
+
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+    <Fragment>
+
+        <UI Id="WixUI_Cactus809">
+
+            <!-- ********************************************************************************* -->
+            <!-- *************** Windows account login and password dialog *********************** -->
+            <!-- ********************************************************************************* -->
+
+            <Property Id="USER_NAME" Secure="yes" />
+            <Property Id="USER_PASSWORD" Secure="yes" />
+            <!--<Property Id="ENCRYPT_WEB_CONFIG" Value="0" />-->
+
+            <Dialog Id="WindowsAccountDlg" Width="370" Height="270" Title="[ProductName] Setup" NoMinimize="yes">
+                <Control Id="Title" Type="Text" X="15" Y="6" Width="200" Height="15" Transparent="yes" NoPrefix="yes" Text="{\WixUI_Font_Title}!(loc.AccountCaption)" />
+                <Control Id="Description" Type="Text" X="25" Y="18" Width="280" Height="25" Transparent="yes" NoPrefix="yes" Text="!(loc.AccountSuggestion)" />
+                <Control Id="BannerBitmap" Type="Bitmap" X="0" Y="0" Width="370" Height="44" TabSkip="no" Text="!(loc.InstallDirDlgBannerBitmap)" />
+                <Control Id="BannerLine" Type="Line" X="0" Y="44" Width="370" Height="0" />
+
+                <Control Id="AccountExistsText" Type="Text" X="45" Y="60" Width="300" Height="40" Transparent="yes" NoPrefix="yes" Text="!(loc.AccountExists)"/>
+                
+                <Control Id="UserLoginText" Type="Text" X="45" Y="95" Width="100" Height="15" Transparent="yes" NoPrefix="yes" Text="!(loc.AccountLogin)"/>
+                <Control Id="UserLoginEdit" Type="Edit" X="130" Y="90" Width="200" Height="18" Property="USER_NAME"/>
+                <Control Id="UserLoginHint" Type="Text" X="140" Y="110" Width="200" Height="15" Transparent="yes" NoPrefix="yes" Text="!(loc.Example): timeguard"/>
+
+                <Control Id="UserPasswordText" Type="Text" X="45" Y="145" Width="100" Height="15" Transparent="yes" NoPrefix="yes" Text="!(loc.AccountPassword)"/>
+                <Control Id="UserPasswordEdit" Type="Edit" X="130" Y="140" Width="200" Height="18" Property="USER_PASSWORD"/>
+                <Control Id="UserPasswordHint" Type="Text" X="140" Y="160" Width="200" Height="15" Transparent="yes" NoPrefix="yes" Text="!(loc.YouHaveToCreatePasswordByYourself)"/>
+
+                <Control Id="UserPasswordDescriptionText" Type="Text" X="45" Y="180" Width="300" Height="40" Transparent="yes" NoPrefix="yes" Text="!(loc.AccountDescription)"/>
+
+                <Control Id="EncryptWebConfigCheckBox" Type="CheckBox" X="45" Y="205" Width="290" Height="17" Property="ENCRYPT_WEB_CONFIG" CheckBoxValue="0"
+                         Text="!(loc.EncryptWebConfig)" />
+
+                <Control Id="BottomLine" Type="Line" X="0" Y="234" Width="370" Height="0" />
+                <Control Id="Next" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Text="!(loc.WixUINext)"/>
+                <Control Id="Back" Type="PushButton" X="180" Y="243" Width="56" Height="17" Text="!(loc.WixUIBack)" />
+                <Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="56" Height="17" Cancel="yes" Text="!(loc.WixUICancel)">
+                    <Publish Event="SpawnDialog" Value="CancelDlg">1</Publish>
+                </Control>
+            </Dialog>
+
+
+            <!-- ********************************************************************************* -->
+            <!-- *************** Cactus interface login and password dialog ********************** -->
+            <!-- ********************************************************************************* -->
+
+            <Property Id="AUTHDATA_LOGIN" Secure="yes"/>
+            <Property Id="AUTHDATA_PASSWORD" Secure="yes"/>
+            <Property Id="SAVE_PASSWORDS" Value="yes" Secure="yes"/>
+
+            <Dialog Id="AuthDataDlg" Width="370" Height="270" Title="[ProductName] Setup" NoMinimize="yes">
+                <Control Id="Title" Type="Text" X="15" Y="6" Width="200" Height="15" Transparent="yes" NoPrefix="yes" Text="{\WixUI_Font_Title}!(loc.AuthDataCaption)" />
+                <Control Id="Description" Type="Text" X="25" Y="23" Width="280" Height="15" Transparent="yes" NoPrefix="yes" Text="!(loc.AuthDataSuggestion)" />
+                <Control Id="BannerBitmap" Type="Bitmap" X="0" Y="0" Width="370" Height="44" TabSkip="no" Text="!(loc.InstallDirDlgBannerBitmap)" />
+                <Control Id="BannerLine" Type="Line" X="0" Y="44" Width="370" Height="0" />
+
+                <Control Id="SavePasswordsCheckBox" Type="CheckBox" X="45" Y="70" Width="320" Height="17"
+                    Property="SAVE_PASSWORDS" CheckBoxValue="yes" Text="!(loc.SavePasswordToFile)">
+                </Control>
+
+                <Control Id="UserLoginText" Type="Text" X="45" Y="95" Width="100" Height="15" Transparent="yes" NoPrefix="yes" Text="!(loc.AuthDataLogin)"/>
+                <Control Id="UserLoginEdit" Type="Edit" X="130" Y="90" Width="200" Height="18" Property="AUTHDATA_LOGIN"/>
+                <Control Id="UserLoginHint" Type="Text" X="140" Y="110" Width="200" Height="15" Transparent="yes" NoPrefix="yes" Text="!(loc.Example): ivanoff"/>
+
+                <Control Id="UserPasswordText" Type="Text" X="45" Y="145" Width="100" Height="15" Transparent="yes" NoPrefix="yes" Text="!(loc.AuthDataPassword)"/>
+                <Control Id="UserPasswordEdit" Type="Edit" X="130" Y="140" Width="200" Height="18" Property="AUTHDATA_PASSWORD"/>
+                <Control Id="UserPasswordHint" Type="Text" X="140" Y="160" Width="200" Height="15" Transparent="yes" NoPrefix="yes" Text="!(loc.YouHaveToCreatePasswordByYourself)"/>
+
+                <Control Id="UserPasswordDescriptionText" Type="Text" X="45" Y="190" Width="300" Height="40" Transparent="yes" NoPrefix="yes" Text="!(loc.UserPasswordDescription)"/>
+
+                <Control Id="BottomLine" Type="Line" X="0" Y="234" Width="370" Height="0" />
+                <Control Id="Next" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Text="!(loc.WixUINext)"/>
+                <Control Id="Back" Type="PushButton" X="180" Y="243" Width="56" Height="17" Text="!(loc.WixUIBack)" />
+                <Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="56" Height="17" Cancel="yes" Text="!(loc.WixUICancel)">
+                    <Publish Event="SpawnDialog" Value="CancelDlg">1</Publish>
+                </Control>
+            </Dialog>
+
+            <!-- ********************************************************************************* -->
+            <!-- ************************* License number and key ******************************** -->
+            <!-- ********************************************************************************* -->
+
+            <Property Id="LICENSE_NUMBER" Secure="yes"/>
+            <Property Id="LICENSE_KEY" Secure="yes"/>
+
+            <Dialog Id="LicenseKeyDlg" Width="370" Height="270" Title="[ProductName] Setup">
+                <Control Id="Title" Type="Text" X="15" Y="6" Width="200" Height="15" Transparent="yes" NoPrefix="yes" Text="{\WixUI_Font_Title}!(loc.LicenseInformationCaption)" />
+                <Control Id="Description" Type="Text" X="25" Y="23" Width="280" Height="15" Transparent="yes" NoPrefix="yes" Text="!(loc.LicenseInformationSuggestion)" />
+                <Control Id="BannerBitmap" Type="Bitmap" X="0" Y="0" Width="370" Height="44" TabSkip="no" Text="!(loc.InstallDirDlgBannerBitmap)" />
+                <Control Id="BannerLine" Type="Line" X="0" Y="44" Width="370" Height="0" />
+
+                <Control Id="LicenseNumberText" Type="Text" X="45" Y="95" Width="100" Height="15" Transparent="yes" NoPrefix="yes" Text="!(loc.LicenseNumber)"/>
+                <Control Id="LicenseNumberEdit" Type="Edit" X="130" Y="90" Width="200" Height="18" Property="LICENSE_NUMBER"/>
+                <Control Id="LicenseNumberHint" Type="Text" X="140" Y="110" Width="200" Height="15" Transparent="yes" NoPrefix="yes" Text="!(loc.Example): K8CJM-ZEJ9P-PCLKZ-3LMX4-X34WD"/>
+
+                <Control Id="LicenseKeyText" Type="Text" X="45" Y="145" Width="100" Height="15" Transparent="yes" NoPrefix="yes" Text="!(loc.LicenseKey)"/>
+                <Control Id="LicenseKeyEdit" Type="Edit" X="130" Y="140" Width="200" Height="18" Property="LICENSE_KEY"/>
+                <Control Id="LicenseKeyHint" Type="Text" X="140" Y="160" Width="200" Height="15" Transparent="yes" NoPrefix="yes" Text="!(loc.Example): 73209"/>
+
+                <Control Id="BottomLine" Type="Line" X="0" Y="234" Width="370" Height="0" />
+                <Control Id="Next" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Text="!(loc.WixUINext)">
+<!--                    <Condition Action="disable">(LICENSE_NUMBER = "") OR (LICENSE_KEY = "")</Condition>-->
+<!--                    <Condition Action="enable">-->
+<!--                        <![CDATA[(LICENSE_NUMBER <> "") AND (LICENSE_KEY <> "")]]>-->
+<!--                    </Condition>-->
+                </Control>
+                <Control Id="Back" Type="PushButton" X="180" Y="243" Width="56" Height="17" Text="!(loc.WixUIBack)" />
+                <Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="56" Height="17" Cancel="yes" Text="!(loc.WixUICancel)">
+                    <Publish Event="SpawnDialog" Value="CancelDlg">1</Publish>
+                </Control>
+            </Dialog>
+
+            <!-- ********************************************************************************* -->
+            <!-- *************************** Checking IP Address ********************************* -->
+            <!-- ********************************************************************************* -->
+
+            <Property Id="IP_ADDRESS" Secure="yes"/>
+            <Property Id="WINDOWS_FIREWALL_RULE" Value="1" />
+            <!--Property Id="MACHINE_NAME" Secure="yes" /-->
+          <Property Id="INSTANCE_NAME" Secure="yes" />
+
+          <Dialog Id="IPAddressDlg" Width="370" Height="270" Title="[ProductName] Setup">
+                <Control Id="Title" Type="Text" X="15" Y="6" Width="200" Height="15" Transparent="yes" NoPrefix="yes" Text="{\WixUI_Font_Title}!(loc.LicenseInformationCaption)" />
+                <Control Id="Description" Type="Text" X="25" Y="23" Width="280" Height="15" Transparent="yes" NoPrefix="yes" Text="!(loc.LicenseInformationSuggestion)" />
+                <Control Id="BannerBitmap" Type="Bitmap" X="0" Y="0" Width="370" Height="44" TabSkip="no" Text="!(loc.InstallDirDlgBannerBitmap)" />
+                <Control Id="BannerLine" Type="Line" X="0" Y="44" Width="370" Height="0" />
+
+                <Control Id="IPAddressText" Type="Text" X="45" Y="70" Width="300" Height="15" Transparent="yes" NoPrefix="yes" Text="!(loc.IPAddress)"/>
+                <Control Id="IPAddressEdit" Type="Edit" X="45" Y="90" Width="200" Height="18" Property="IP_ADDRESS"/>
+                <Control Id="IPAddressHint" Type="Text" X="55" Y="115" Width="300" Height="15" Transparent="yes" NoPrefix="yes" Text="!(loc.Example): 71.123.98.10, mystatsserver.com, 192.168.0.100"/>
+
+                <Control Id="IPAddressDescriptionText" Type="Text" X="45" Y="135" Width="300" Height="50" Transparent="yes" NoPrefix="yes" Text="!(loc.IPAddressDescription)"/>
+
+              <Control Id="InstanceNameText" Type="Text" X="45" Y="155" Width="300" Height="15" Transparent="yes" NoPrefix="yes" Text="!(loc.InstanceName)"/>
+              <Control Id="InstanceNameEdit" Type="Edit" X="45" Y="175" Width="200" Height="18" Property="INSTANCE_NAME"/>
+
+                <Control Id="DesktopShortcutCheckBox" Type="CheckBox" X="45" Y="200" Width="290" Height="17" Property="WINDOWS_FIREWALL_RULE" CheckBoxValue="1" 
+                         Text="!(loc.CreateWindowsFirewallRule)" />
+
+                <Control Id="BottomLine" Type="Line" X="0" Y="234" Width="370" Height="0" />
+                <Control Id="Next" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Text="!(loc.WixUINext)">
+                </Control>
+                <Control Id="Back" Type="PushButton" X="180" Y="243" Width="56" Height="17" Text="!(loc.WixUIBack)" />
+                <Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="56" Height="17" Cancel="yes" Text="!(loc.WixUICancel)">
+                    <Publish Event="SpawnDialog" Value="CancelDlg">1</Publish>
+                </Control>
+            </Dialog>
+
+            <!-- ********************************************************************************* -->
+            <!-- ************************** Show localized license ******************************* -->
+            <!-- ********************************************************************************* -->
+
+            <Dialog Id="LicenseAgreementKludge" Width="370" Height="270" Title="!(loc.LicenseAgreementDlg_Title)">
+                <Control Id="BannerBitmap" Type="Bitmap" X="0" Y="0" Width="370" Height="44" TabSkip="no" Text="!(loc.LicenseAgreementDlgBannerBitmap)" />
+                <Control Id="BannerLine" Type="Line" X="0" Y="44" Width="370" Height="0" />
+                <Control Id="BottomLine" Type="Line" X="0" Y="234" Width="370" Height="0" />
+                <Control Id="Description" Type="Text" X="25" Y="23" Width="340" Height="15" Transparent="yes" NoPrefix="yes" Text="!(loc.LicenseAgreementDlgDescription)" />
+                <Control Id="Title" Type="Text" X="15" Y="6" Width="200" Height="15" Transparent="yes" NoPrefix="yes" Text="!(loc.LicenseAgreementDlgTitle)" />
+                <Control Id="LicenseAcceptedCheckBox" Type="CheckBox" X="20" Y="207" Width="330" Height="18" CheckBoxValue="1" Property="LICENSE_READ" Text="!(loc.LicenseAgreementDlgLicenseAcceptedCheckBox)" />
+                <Control Id="Print" Type="PushButton" X="112" Y="243" Width="56" Height="17" Text="!(loc.WixUIPrint)">
+                    <Publish Event="DoAction" Value="WixUIPrintEula">1</Publish>
+                </Control>
+                <Control Id="Back" Type="PushButton" X="180" Y="243" Width="56" Height="17" Text="!(loc.WixUIBack)" />
+                <Control Id="Next" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Text="!(loc.WixUINext)">
+                    <Publish Event="SpawnWaitDialog" Value="WaitForCostingDlg">!(wix.WixUICostingPopupOptOut) OR CostingComplete = 1</Publish>
+                    <Condition Action="disable"><![CDATA[LICENSE_READ <> 1]]></Condition>
+                    <Condition Action="enable">LICENSE_READ = 1</Condition>
+                </Control>
+                <Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="56" Height="17" Cancel="yes" Text="!(loc.WixUICancel)">
+                    <Publish Event="SpawnDialog" Value="CancelDlg">1</Publish>
+                </Control>
+                <Control Id="LicenseText" Type="ScrollableText" X="20" Y="60" Width="330" Height="140" Sunken="yes" TabSkip="no">
+                    <Text SourceFile="$(var.ProjectDir)\!(loc.LicenseRtf)" />
+                    <!-- this value has been modified -->
+                </Control>
+            </Dialog>
+
+            <!-- ********************************************************************************* -->
+            <!-- **************************** Dialogs sequence *********************************** -->
+            <!-- ********************************************************************************* -->
+
+            <TextStyle Id="WixUI_Font_Normal" FaceName="Tahoma" Size="8" />
+            <TextStyle Id="WixUI_Font_Bigger" FaceName="Tahoma" Size="12" />
+            <TextStyle Id="WixUI_Font_Title" FaceName="Tahoma" Size="9" Bold="yes" />
+
+            <Property Id="DefaultUIFont" Value="WixUI_Font_Normal" />
+            <Property Id="WixUI_Mode" Value="Mondo" />
+
+            <DialogRef Id="ErrorDlg" />
+            <DialogRef Id="FatalError" />
+            <DialogRef Id="FilesInUse" />
+            <DialogRef Id="MsiRMFilesInUse" />
+            <DialogRef Id="PrepareDlg" />
+            <DialogRef Id="ProgressDlg" />
+            <DialogRef Id="ResumeDlg" />
+            <DialogRef Id="UserExit" />
+
+            <Publish Dialog="ExitDialog" Control="Finish" Event="EndDialog" Value="Return" Order="999">1</Publish>
+
+            <Publish Dialog="WelcomeDlg" Control="Next" Event="NewDialog" Value="LicenseAgreementKludge">NOT Installed AND NOT PATCH</Publish>
+            <Publish Dialog="WelcomeDlg" Control="Next" Event="NewDialog" Value="VerifyReadyDlg">Installed AND PATCH</Publish>
+
+            <Publish Dialog="LicenseAgreementKludge" Control="Back" Event="NewDialog" Value="WelcomeDlg">1</Publish>
+            <Publish Dialog="LicenseAgreementKludge" Control="Next" Event="NewDialog" Value="LicenseKeyDlg" Order="2">NOT SELFFOUND AND LICENSE_READ = 1</Publish>
+            <!--
+            <Publish Dialog="LicenseAgreementKludge" Control="Next" Event="NewDialog" Value="LicenseKeyDlg" Order="2">LICENSE_READ = 1</Publish>
+-->
+<!---->
+            <Publish Dialog="LicenseAgreementKludge" Control="Next" Event="NewDialog" Value="VerifyReadyDlg" Order="3">
+				NOT(USER_NAME = "") AND NOT(USER_PASSWORD = "") AND SELFFOUND AND NOT (WINDOWS_ACCOUNT_IS_NOT_SET = "") AND LICENSE_READ = 1
+			</Publish>
+            <Publish Dialog="LicenseAgreementKludge" Control="Next" Event="NewDialog" Value="WindowsAccountDlg" Order="4">
+				NOT(USER_NAME = "") AND NOT(USER_PASSWORD = "") AND SELFFOUND AND WINDOWS_ACCOUNT_IS_NOT_SET = "" AND LICENSE_READ = 1
+			</Publish>
+            <Publish Dialog="LicenseAgreementKludge" Control="Next" Event="NewDialog" Value="WindowsAccountDlg" Order="4">
+				(USER_NAME = "" OR USER_PASSWORD = "") AND SELFFOUND AND LICENSE_READ = 1
+			</Publish>
+
+            <!-- **************************** Start custom dialogs *********************************** -->
+
+            <Publish Dialog="LicenseKeyDlg" Control="Back" Event="NewDialog" Value="LicenseAgreementKludge">1</Publish>
+            <Publish Dialog="LicenseKeyDlg" Control="Next" Event="NewDialog" Value="WindowsAccountDlg" Order="2">
+                NOT(LICENSE_NUMBER = "") AND NOT(LICENSE_KEY = "")
+            </Publish>
+
+            <Publish Dialog="WindowsAccountDlg" Control="Back" Event="NewDialog" Value="LicenseKeyDlg" Order="1">NOT SELFFOUND</Publish>
+            <Publish Dialog="WindowsAccountDlg" Control="Back" Event="NewDialog" Value="LicenseAgreementKludge" Order="2">SELFFOUND</Publish>
+            <Publish Dialog="WindowsAccountDlg" Control="Next" Event="NewDialog" Value="AuthDataDlg" Order="3">
+                NOT SELFFOUND AND NOT(USER_NAME = "") AND NOT(USER_PASSWORD = "")
+            </Publish>
+            <Publish Dialog="WindowsAccountDlg" Control="Next" Event="NewDialog" Value="VerifyReadyDlg" Order="4">
+                SELFFOUND AND NOT(USER_NAME = "") AND NOT(USER_PASSWORD = "")
+            </Publish>
+
+            <Publish Dialog="AuthDataDlg" Control="Back" Event="NewDialog" Value="WindowsAccountDlg">1</Publish>
+            <Publish Dialog="AuthDataDlg" Control="Next" Event="NewDialog" Value="IPAddressDlg" Order="2">
+                NOT(AUTHDATA_LOGIN = "") AND NOT(AUTHDATA_PASSWORD = "") AND NOT(AUTHDATA_LOGIN = AUTHDATA_PASSWORD)
+            </Publish>
+
+            <Publish Dialog="IPAddressDlg" Control="Back" Event="NewDialog" Value="AuthDataDlg">1</Publish>
+<!--            <Publish Dialog="IPAddressDlg" Control="Next" Event="DoAction" Value="SetupTypeDlg" Order="1">1</Publish>-->
+                <Publish Dialog="IPAddressDlg" Control="Next" Event="NewDialog" Value="SetupTypeDlg" Order="2">
+                  NOT(IP_ADDRESS = "") AND NOT(INSTANCE_NAME = "")
+                </Publish>
+
+            <!-- ***************************** End custom dialogs ************************************ -->
+
+            <Publish Dialog="SetupTypeDlg" Control="Back" Event="NewDialog" Value="AuthDataDlg">1</Publish>
+            <Publish Dialog="SetupTypeDlg" Control="TypicalButton" Event="NewDialog" Value="VerifyReadyDlg">1</Publish>
+            <Publish Dialog="SetupTypeDlg" Control="CustomButton" Event="NewDialog" Value="CustomizeDlg">1</Publish>
+            <Publish Dialog="SetupTypeDlg" Control="CompleteButton" Event="NewDialog" Value="VerifyReadyDlg">1</Publish>
+
+            <Publish Dialog="CustomizeDlg" Control="Back" Event="NewDialog" Value="MaintenanceTypeDlg" Order="1">WixUI_InstallMode = "Change"</Publish>
+            <Publish Dialog="CustomizeDlg" Control="Back" Event="NewDialog" Value="SetupTypeDlg" Order="2">WixUI_InstallMode = "InstallCustom"</Publish>
+            <Publish Dialog="CustomizeDlg" Control="Next" Event="NewDialog" Value="VerifyReadyDlg">1</Publish>
+
+            <Publish Dialog="VerifyReadyDlg" Control="Back" Event="NewDialog" Value="CustomizeDlg" Order="1">WixUI_InstallMode = "InstallCustom"</Publish>
+            <Publish Dialog="VerifyReadyDlg" Control="Back" Event="NewDialog" Value="SetupTypeDlg" Order="2">WixUI_InstallMode = "InstallTypical" OR WixUI_InstallMode = "InstallComplete"</Publish>
+            <Publish Dialog="VerifyReadyDlg" Control="Back" Event="NewDialog" Value="CustomizeDlg" Order="3">WixUI_InstallMode = "Change"</Publish>
+            <Publish Dialog="VerifyReadyDlg" Control="Back" Event="NewDialog" Value="MaintenanceTypeDlg" Order="4">WixUI_InstallMode = "Repair" OR WixUI_InstallMode = "Remove"</Publish>
+            <Publish Dialog="VerifyReadyDlg" Control="Back" Event="NewDialog" Value="WindowsAccountDlg" Order="5">
+                (SELFFOUND AND WINDOWS_ACCOUNT_IS_NOT_SET = "") OR WixUI_InstallMode = "Update"
+            </Publish>
+            <Publish Dialog="VerifyReadyDlg" Control="Back" Event="NewDialog" Value="LicenseAgreementKludge" Order="6">
+                (SELFFOUND AND NOT (WINDOWS_ACCOUNT_IS_NOT_SET = "")) OR WixUI_InstallMode = "Update"
+            </Publish>
+
+            <Publish Dialog="MaintenanceWelcomeDlg" Control="Next" Event="NewDialog" Value="MaintenanceTypeDlg">1</Publish>
+
+            <Publish Dialog="MaintenanceTypeDlg" Control="ChangeButton" Event="NewDialog" Value="CustomizeDlg">1</Publish>
+            <Publish Dialog="MaintenanceTypeDlg" Control="RepairButton" Event="NewDialog" Value="VerifyReadyDlg">1</Publish>
+            <Publish Dialog="MaintenanceTypeDlg" Control="RemoveButton" Event="NewDialog" Value="VerifyReadyDlg">1</Publish>
+            <Publish Dialog="MaintenanceTypeDlg" Control="Back" Event="NewDialog" Value="MaintenanceWelcomeDlg">1</Publish>
+        </UI>
+
+        <UIRef Id="WixUI_Common" />
+
+
+        <!-- Типа начать установку незамедлительно, пропустив все страницы инсталлятора-->
+        <!--                <Control Id="Install" Type="PushButton" X="304" Y="243" Width="56" Height="17"-->
+        <!--                    Default="yes" Text="Install">-->
+        <!--                    <Publish Event="EndDialog" Value="Return" />-->
+        <!--                </Control>-->
+
+    </Fragment>
+</Wix>

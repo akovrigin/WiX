@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Include>
+    <Property Id="RIGHT_BRACKET" Value="[" />
+    <Property Id="LEFT_BRACKET" Value="]" />
+
+    <!-- System properties of developer machine. I don't know, maybe it'll be useful for create install actions. -->
+    <Property Id='ROOTDRIVE' Value='$(env.SystemDrive)' />
+    <Property Id='COMPUTERNAME' Value='$(env.ComputerName)' />
+
+    <!-- System properties of targer machine -->
+    <Property Id="MACHINE_NAME">
+        <RegistrySearch	Id="EvsRegistrySearchMachineName"
+                        Root="HKLM"
+                        Type="raw"
+                        Name="Hostname"
+                        Key="SYSTEM\CurrentControlSet\Services\Tcpip\Parameters"/>
+    </Property>
+</Include>

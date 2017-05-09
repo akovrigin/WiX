@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+	<Fragment>
+
+        <!--If license.rtf is only the one file for one language /-->
+        <!--WixVariable Id="WixUILicenseRtf" Value="!(loc.LicenseRtf)" /-->
+
+        <UI Id="CactusInstallDialogs">
+
+            <UIRef Id="WixUI_Cactus809"/>
+
+        </UI>
+    </Fragment>
+</Wix>

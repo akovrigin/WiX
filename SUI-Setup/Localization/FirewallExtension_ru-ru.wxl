@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+-->
+<WixLocalization Culture="ru-ru" xmlns="http://schemas.microsoft.com/wix/2006/localization">
+	<String Id="msierrFirewallCannotConnect">Невозможно подключиться к службе брандмауэра</String>
+    <String Id="WixExecFirewallExceptionsInstall">Установка конфигурации брандмауэра</String>
+    <String Id="WixExecFirewallExceptionsUninstall">Удаление конфигурации брандмауэра</String>
+    <String Id="WixRollbackFirewallExceptionsInstall">Отмена установки конфигурации брэндмауэра</String>
+    <String Id="WixRollbackFirewallExceptionsUninstall">Отмена удаления конфигурации брэндмауэра</String>
+    <String Id="WixSchedFirewallExceptionsInstall">Настройка брэндмауэра</String>
+    <String Id="WixSchedFirewallExceptionsUninstall">Удаление настройки брэндмауэра</String>
+</WixLocalization>

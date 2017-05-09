@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<WixLocalization Culture="en-us" xmlns="http://schemas.microsoft.com/wix/2006/localization" Codepage='1252'>
+    
+    <!-- Cactus package and components description -->
+
+    <String Id="Manufacturer">MFCOM LLC</String>
+    <String Id="PackageDescription">Server-side installation for "TimeGuard"</String>
+    <String Id="PackageComments">The package is designed to install server part of the "TimeGuard"</String>
+    <String Id="ProductFeatureTitle">TimeGuard Server</String>
+    <String Id="ProductFeatureDescription">TimeGuard Server</String>
+
+    <String Id="WebContentTitle">User interface</String>
+    <String Id="WebContentDescription">Installs web-style user interface</String>
+
+    <String Id="CreateDBTitle">Create database</String>
+    <String Id="CreateDBDescription">Creates and tunes database that will be used as a statistics storage. Database must be created if product is being installed for the first time.</String>
+
+    <String Id="ShortcutTitle">TimeGuard</String>
+    <String Id="ShortcutDescription">TimeGuard Server</String>
+    <String Id="ShortcutPasswordsTitle">Passwords</String>
+
+    <!-- Dialog boxes -->
+    
+    <String Id="LicenseInformationCaption">License Information</String>
+    <String Id="LicenseInformationSuggestion">Enter the following information to personalize your installation</String>
+    <String Id="LicenseNumber">License number</String>
+    <String Id="LicenseKey">Activation code</String>
+
+    <String Id="AuthDataCaption">Login and password</String>
+    <String Id="AuthDataSuggestion">Create a login and password to work with the program</String>
+    <String Id="AuthDataLogin">Login</String>
+    <String Id="AuthDataPassword">Password</String>
+    <String Id="YouHaveToCreatePasswordByYourself">You should create the password</String>
+    <String Id="UserPasswordDescription">The password must be at least 6 characters in length, do not contain spaces and not match to your login</String>
+    <String Id="SavePasswordToFile">Store my login and password in file 'password.txt' in the installation folder</String>
+
+    <String Id="AccountCaption">Windows account</String>
+    <String Id="AccountSuggestion">Create a user name and password for the Windows account on whose behalf the program will run</String>
+    <String Id="AccountExists">If such the account exists you can specify its name and password</String>
+    <String Id="AccountLogin">User name</String>
+    <String Id="AccountPassword">Password</String>
+    <String Id="AccountDescription">Local policies will be applied for the account being created</String>
+
+    <String Id="IPAddress">Specify the address for this TimeGuard Server</String>
+    <String Id="IPAddressDescription">You can change the value later. Please see the Help for instructions.</String>
+    <String Id="CreateWindowsFirewallRule">Create a rule for Windows Firewall</String>
+
+    <String Id="InstanceName">Computer and DB instance name</String>
+
+    <String Id="EncryptWebConfig">Encrypt sensitive information in the file web.config</String>
+
+    <!-- System messages -->
+
+    <String Id="PrereqNetFramework40">This application requires .NET Framework 4.0. Please install the .NET Framework then run this installer again.</String>
+    <String Id="PrereqIIS">This application requires Internet Information Services (IIS). Please install the IIS then run this installer again.</String>
+    <String Id="PrereqMSSQL2008">This application requires Microsoft SQL Server 2008 R2. Please install the Microsoft SQL Server 2008 R2 then run this installer again.</String>
+    <String Id="PrereqOS">This version Windows is not supported. Use Windows XP SP3 or higher.</String>
+    <String Id="Example">Example</String>
+    <String Id="AdminRightsDetectionFailed">User must have administrator privileges.</String>
+
+    <String Id="NoDowngrade">A later version of TimeGuard Server is already installed.</String>
+    
+
+    <!-- Others -->
+    <String Id="LicenseRtf" Overridable="yes">License-en.rtf</String>
+
+    <String Id="ProductLanguage">1033</String>
+    <String Id="ProductCodepage">1252</String>
+    <String Id="SummaryCodepage">1252</String>
+
+</WixLocalization>

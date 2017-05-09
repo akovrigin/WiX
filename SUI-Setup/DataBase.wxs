@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
+     xmlns:util="http://schemas.microsoft.com/wix/UtilExtension"
+     xmlns:sql="http://schemas.microsoft.com/wix/SqlExtension">
+
+    <Fragment>
+
+        <DirectoryRef Id='ManufacturerFolder'>
+            <Component Id="SqlComponent" Guid="{40B373EB-3142-4C87-82B6-0E5BA0B6F932}" DiskId="1" KeyPath="yes">
+                <sql:SqlDatabase Id="Cactus809SqlDatabase" Database="[DATABASENAME]" Server="[INSTANCE_NAME]"
+                                 CreateOnInstall="yes" DropOnUninstall="no" ContinueOnError="no">
+                    <sql:SqlScript Id="CheckDBAlreadyExists" ExecuteOnInstall="yes" ExecuteOnReinstall="no" ExecuteOnUninstall="no"
+                                   BinaryKey="CheckDBAlreadyExistsBin" ContinueOnError="no" Sequence="1"></sql:SqlScript>
+                    <sql:SqlScript Id="CreateDB" ExecuteOnInstall="yes" ExecuteOnReinstall="no" ExecuteOnUninstall="no"
+                                   BinaryKey="CreateDBBin" ContinueOnError="no" Sequence="2"></sql:SqlScript>
+                    <sql:SqlString Id="CreateLogin" ExecuteOnInstall="yes" ExecuteOnReinstall="no" ExecuteOnUninstall="no" ContinueOnError="no" Sequence="3"
+                       SQL="USE master;
+                            if not exists(select 1 from sys.server_principals where type = 'U' and name='[MACHINE_NAME]\[USER_NAME]')
+                                CREATE LOGIN [LEFT_BRACKET][MACHINE_NAME]\[USER_NAME][RIGHT_BRACKET] FROM WINDOWS WITH DEFAULT_DATABASE=[LEFT_BRACKET]master[RIGHT_BRACKET]"
+                        />
+                    <sql:SqlString Id="CreateUserName" ExecuteOnInstall="yes" ExecuteOnReinstall="no" ExecuteOnUninstall="no" ContinueOnError="no" Sequence="4"
+                       SQL="USE [LEFT_BRACKET][DATABASENAME][RIGHT_BRACKET];CREATE USER [LEFT_BRACKET][MACHINE_NAME]\[USER_NAME][RIGHT_BRACKET] FOR LOGIN [LEFT_BRACKET][MACHINE_NAME]\[USER_NAME][RIGHT_BRACKET];"
+                        />
+					<!-- The SL* parameters are set @ CustomAction.ActivateLicense. The next line creates server license record -->
+                    <sql:SqlString Id="SaveLicense" ExecuteOnInstall="yes" ExecuteOnReinstall="no" ExecuteOnUninstall="no" ContinueOnError="no" Sequence="5"
+                       SQL="insert into License(ParentId, Active, Number, KeyHash, ExpirationDate, LicenseTypeId, Address) values(NULL, [SL_IsActive], '[SL_Number]', '[SL_KeyHash]', '[SL_ExpirationDate]', [SL_Type], '[SL_Address]');
+                           declare @id bigint;
+                           select @id = max(id) from License;
+						   insert into LicenseProperty(LicenseId, TypeId, Value) values(@id, 1, '[SL_PV1]');
+						   insert into LicenseProperty(LicenseId, TypeId, Value) values(@id, 2, '[SL_PV2]');
+						   insert into LicenseProperty(LicenseId, TypeId, Value) values(@id, 3, '[SL_PV3]');"
+                        />
+                </sql:SqlDatabase>
+				<sql:SqlDatabase Id ="LoginDatabase" Database="[LOGINDATABASE]" Server="[INSTANCE_NAME]"
+								 CreateOnInstall="yes" DropOnUninstall="no" ContinueOnError="no">
+					<sql:SqlScript Id="CheckIfLoginDbExists" ExecuteOnInstall="yes" ExecuteOnReinstall="no" ExecuteOnUninstall="no"
+								   BinaryKey="CheckLoginDb" ContinueOnError="no" Sequence="1"/>
+					<sql:SqlScript Id="CreateLoginDb" ExecuteOnInstall="yes" ExecuteOnReinstall="no" ExecuteOnUninstall="no" 
+								   BinaryKey="CreateLoginDb" ContinueOnError="no" Sequence="2"/>
+					<sql:SqlString Id="ApplyLogin" ExecuteOnInstall="yes" ExecuteOnReinstall="no" ExecuteOnUninstall="no" 
+								   ContinueOnError="no" Sequence="3"
+								   SQL ="USE [LEFT_BRACKET][LOGINDATABASE][RIGHT_BRACKET];
+								   CREATE USER [LEFT_BRACKET][MACHINE_NAME]\[USER_NAME][RIGHT_BRACKET] FOR LOGIN [LEFT_BRACKET][MACHINE_NAME]\[USER_NAME][RIGHT_BRACKET];
+								   "/>
+					<sql:SqlString Id="ChangeMembership" ExecuteOnInstall="yes" ExecuteOnReinstall="no" ExecuteOnUninstall="no" ContinueOnError="no" Sequence="4"
+								   SQL ="USE [LEFT_BRACKET][LOGINDATABASE][RIGHT_BRACKET];EXEC sp_addrolemember N'db_owner', N'[MACHINE_NAME]\[USER_NAME]';
+								   exec SP_ADDSRVROLEMEMBER '[MACHINE_NAME]\[USER_NAME]', 'sysadmin';"/>
+					<sql:SqlString Id="PersistPassword" ExecuteOnInstall="yes" ExecuteOnReinstall="no" ExecuteOnUninstall="no" ContinueOnError="no" Sequence="5"
+								   SQL ="USE [LEFT_BRACKET][LOGINDATABASE][RIGHT_BRACKET];insert into UserProfile(UserName) values('[AUTHDATA_LOGIN]');
+								   insert into webpages_Membership(UserId, CreateDate, IsConfirmed, PasswordFailuresSinceLastSuccess, Password, PasswordSalt, PasswordChangedDate)
+									values(1, GETDATE(), 1, 0, '[MEGAHASH]', '', GETDATE());"/>
+					<sql:SqlString Id="CreateTechUser" ExecuteOnInstall="yes" ExecuteOnReinstall="no" ExecuteOnUninstall="no" ContinueOnError="no" Sequence="6"
+								   SQL ="USE [LEFT_BRACKET][DATABASENAME][RIGHT_BRACKET];insert into TechnicalUser(OuterUserId, ServerLicenseNumber) values(1, '[SL_Number]');"/>
+					<sql:SqlString Id="PrepareFirstRun" ExecuteOnInstall="yes" ExecuteOnReinstall="no" ExecuteOnUninstall="no" ContinueOnError="no" Sequence="7"
+								   SQL="USE [LEFT_BRACKET][DATABASENAME][RIGHT_BRACKET];insert into UserSettings(UserId, Parameter, Value) values(1, 'FirstRun', 'yes');
+								   insert into UserSettings(UserId, Parameter, Value) values(1, 'Language', '1033');" />
+					<sql:SqlScript Id="PopulateQuestions" ExecuteOnInstall="yes" ExecuteOnReinstall="no" ExecuteOnUninstall="no" BinaryKey="PopQwe" ContinueOnError="no" Sequence="8" />
+				</sql:SqlDatabase>
+                <Condition>NOT SELFFOUND AND Not Installed</Condition>
+            </Component>
+        </DirectoryRef>
+
+        <DirectoryRef Id='ManufacturerFolder'>
+            <Component Id="SqlPatchComponent" Guid="{56681D3B-9EC3-452A-AF91-11610EC9AD03}" DiskId="1" KeyPath="yes">
+                <sql:SqlDatabase Id="DatabaseForPatching" Database="[DATABASENAME]" Server="[INSTANCE_NAME]" 
+                                 CreateOnInstall="yes" DropOnUninstall="no" ContinueOnError="no">
+                    <sql:SqlScript Id="RunPatches" ExecuteOnInstall="yes" ExecuteOnReinstall="yes" ExecuteOnUninstall="no"
+                                   BinaryKey="RunPatchesBin" ContinueOnError="no" Sequence="6"></sql:SqlScript>
+                </sql:SqlDatabase>
+            </Component>
+        </DirectoryRef>
+
+        <Binary Id="CheckDBAlreadyExistsBin" SourceFile="CheckDBAlreadyExists.sql"/>
+        <Binary Id="CreateDBBin" SourceFile="CreateDB.sql"/>
+        <Binary Id="RunPatchesBin" SourceFile="Patches.sql"/>
+		<Binary Id="PopQwe" SourceFile="questions.sql"/>
+
+		<Binary Id="CheckLoginDb" SourceFile="check-login-db.sql"/>
+		<Binary Id="CreateLoginDb" SourceFile="create-login-db.sql"/>
+	</Fragment>
+</Wix>

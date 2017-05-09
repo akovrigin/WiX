@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
+     xmlns:iis="http://schemas.microsoft.com/wix/IIsExtension"
+     xmlns:util="http://schemas.microsoft.com/wix/UtilExtension"
+     xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension"
+     xmlns:sql="http://schemas.microsoft.com/wix/SqlExtension">
+
+    <!--For debugging on the target computer use:  msiexec /i [msiname] /l*v [logfilename] -->
+
+    <!-- !!!    DO NOT CHANGE UpgradeCode. You must change ProductCode, PackageCode.                     !!! -->
+    <!-- !!!    And do not forget to change version in project ProcessingServer file AssemblyInfo.cs     !!! -->
+    <!-- !!!    and in project ServerUI in file AssemblyInfo.cs - it will be showed in WebUI             !!! -->
+    <?define UpgradeCode="{4E7ACAAF-8D63-4DD2-9C6C-CB41CC2C1A12}"?>
+
+    <!-- *** Version 0.9.8 ***
+    <?define ProductVersion="!(bind.FileVersion.ProcessingServer_exe)" ?>
+    <?define ProductCode="{D2F6ACC2-35D7-4AEE-9EFA-47426D7B3EDA}"?>
+    -->
+
+    <!-- *** Version 0.9.9 *** 
+    <?define ProductCode="{E8B71589-DFDC-42B0-B0DA-59983D6B64A5}"?>
+    <?define PackageCode="{8CAB0D50-E005-4D84-8776-5CC67F7479BF}"?>
+	-->
+
+	<!-- *** Version 1.1.0 *** 
+	<?define ProductCode="{F6FA52AF-60CF-44A5-9FA6-ACEFE7D6B71C}"?>
+	<?define PackageCode="{689F00EC-E0C3-44FF-A547-FD3AB3E52666}"?>
+	-->
+
+	<!-- *** Version 1.2.0 
+	<?define ProductCode="{A2B85D2D-E037-470A-98E0-7B83CDEE1DB5}"?>
+	<?define PackageCode="{FD550CBD-0963-40C4-8F0C-481F75CCBE1E}"?>
+	*** -->
+
+	<!-- *** Version 1.2.1 -->
+	<?define ProductCode="{49138E2A-5321-494e-B098-97CB800709FD}"?>
+	<?define PackageCode="{03E906B2-6D64-4a92-B01B-901EA9E8E81B}"?>
+
+	<?define ProductVersion="!(bind.FileVersion.ProcessingServer_exe)" ?>
+
+    <Product Id="$(var.ProductCode)"
+             UpgradeCode="$(var.UpgradeCode)"
+             Version="$(var.ProductVersion)"
+             Name="TimeGuard Statistics Server"
+             Manufacturer="MFCOM LLC"
+             Language="!(loc.ProductLanguage)">
+
+        <Package Id="$(var.PackageCode)"
+                 InstallerVersion="200" Compressed="yes"
+                 Manufacturer="MFCOM LLC"
+                 Description="!(loc.PackageDescription) v.$(var.ProductVersion)"
+                 Comments="!(loc.PackageComments)"
+                 SummaryCodepage="!(loc.SummaryCodepage)"
+                 />
+
+        <Upgrade Id="$(var.UpgradeCode)">
+            <UpgradeVersion OnlyDetect="no" Property="SELFFOUND"
+              Minimum="0.9.8" IncludeMinimum="yes"
+              Maximum="$(var.ProductVersion)" IncludeMaximum="yes"/>
+            <UpgradeVersion OnlyDetect="yes" Property="NEWERFOUND"
+              Minimum="$(var.ProductVersion)" IncludeMinimum="no" />
+        </Upgrade>
+
+
+        <?include ConfigurationInitialize.wxi ?>
+        <?include Conditions.wxi ?>
+
+        <Media Id="1" Cabinet="Cactus809.cab" EmbedCab="yes" CompressionLevel="high" />
+
+        <!-- Иконка, которая будет показываться в форме деинсталляции и прочих системных местах -->
+        <Property Id="ARPPRODUCTICON" Value="cactus809.ico" />
+       
+        <!-- *********************************************************************************-->
+        <!-- Установливаем пользователю права на C:\WINDOWS\Microsoft.NET\Framework\v4.0.30319\Temporary ASP.NET Files -->
+        <!-- *********************************************************************************-->
+
+        <PropertyRef Id="NETFRAMEWORK40FULLINSTALLROOTDIR"/>
+        <DirectoryRef Id="TARGETDIR">
+            <Directory Id="NETFRAMEWORK40FULLINSTALLROOTDIR" Name="This will be ignored because the DirectorySearch used by the PropertyRef above will overwrite it.">
+                <Directory Id="TempASPNETFolder" Name="Temporary ASP.NET Files">
+
+                    <Component Id="TempASPNETFolderCmp" Guid="{343A3B1E-E02E-420B-A49B-2772B4493A59}" DiskId="1" KeyPath="yes">
+
+                        <util:User Id="CactusUser" Name="[USER_NAME]" Password="[USER_PASSWORD]" CreateUser="yes" UpdateIfExists="yes" FailIfExists="no" RemoveOnUninstall="no"/>
+
+                        <CreateFolder>
+                            <util:PermissionEx User="[USER_NAME]" GenericAll="yes"/>
+                            <util:PermissionEx User="NetworkService" GenericAll="yes"/>
+                        </CreateFolder>
+
+                        <Condition>NOT SELFFOUND AND Not Installed</Condition>
+
+                    </Component>
+                </Directory>
+            </Directory>
+        </DirectoryRef>
+
+        <!-- *********************************************************************************-->
+        <!-- ****************************** Диалоги установки ********************************-->
+        <!-- *********************************************************************************-->
+
+        <UIRef Id="CactusInstallDialogs" />
+
+        
+        <!-- *********************************************************************************-->
+        <!-- ****************************** Директории установки *****************************-->
+        <!-- *********************************************************************************-->
+        
+        <!-- Директория, в которую будут устанавливаться файы ПО -->
+        <Directory Id='TARGETDIR' Name='SourceDir'>
+
+        </Directory>
+
+        <DirectoryRef Id='TARGETDIR'>
+            <Directory Id='ProgramFilesFolder' Name='PFiles'>
+                <Directory Id='ManufacturerFolder' Name='MFCOM LLC'>
+                </Directory>
+            </Directory>
+        </DirectoryRef>
+
+        <Property Id="WWWROOT">
+            <RegistrySearch Id='REG_WWWROOT' Type='directory' Root='HKLM' Key='SOFTWARE\Microsoft\InetStp' Name='PathWWWRoot' />
+        </Property>
+
+        <DirectoryRef Id="WWWROOT">
+            <Directory Id="dir_timeguard_1" Name="TimeGuard">
+                <Component Id="web_config" DiskId="1" KeyPath="yes" Guid="{8E5997C6-39F1-4EFA-B476-D3D560AD9CF1}">
+                    <File Id="file_web_config" Source="c:\projects\cactus-809\Data\Config\ServerUIv2\Web.config" Checksum="yes"/>
+                    <util:XmlFile Id="ModifyWebConfig_IdentityUserName"
+                         Action="setValue"
+                         Permanent="yes"
+                         File="[#file_web_config]"
+                         ElementPath="/configuration/system.web/identity/@userName"
+                         Value="[USER_NAME]"
+                         SelectionLanguage="XSLPattern"
+                         Sequence="1" />
+                    <util:XmlFile Id="ModifyWebConfig_IdentityPassword"
+                         Action="setValue"
+                         Permanent="yes"
+                         File="[#file_web_config]"
+                         ElementPath="/configuration/system.web/identity/@password"
+                         Value="[USER_PASSWORD]"
+                         SelectionLanguage="XSLPattern"
+                         Sequence="1" />
+                    <util:XmlFile Id="ModifyWebConfig_LogFile"
+                         Action="setValue"
+                         Permanent="yes"
+                         File="[#file_web_config]"
+                         ElementPath="/configuration/system.diagnostics/trace/listeners/add/@initializeData"
+                         Value="[CactusUILogFolder]CactusUI.log"
+                         SelectionLanguage="XSLPattern"
+                         Sequence="1" />
+
+                </Component>
+            </Directory>
+        </DirectoryRef>
+
+        <DirectoryRef Id='TARGETDIR'>
+            <Directory Id="CommonAppDataFolder" Name="CommonAppDataFolder">
+                <Directory Id="CactusUILogFolder" Name="TimeGuard">
+                    <Component Id="CactusUILogComponent" Guid="{CFAF7C79-A49D-4080-A47E-103B75FCC86A}">
+                        <!--For system folders-->
+                        <!--<RemoveFolder Id='CactusUILogFolder' On='uninstall' />-->
+                        <!--<Registry Root="HKCU" KeyPath="yes" Key="Cactus809_ServerUI"/>-->
+                        <CreateFolder>
+                        </CreateFolder>
+                    </Component>
+                </Directory>
+            </Directory>
+        </DirectoryRef>
+
+
+        <!-- *********************************************************************************-->
+        <!-- **************************** Порядок установки пакета ***************************-->
+        <!-- *********************************************************************************-->
+
+        <Feature Id="ProductFeature" Title="!(loc.ProductFeatureTitle)" Description="!(loc.ProductFeatureDescription)" Level="1" Display="expand" ConfigurableDirectory="WWWROOT">
+
+            <!-- Main content of the Complete feature. -->
+            <Feature Id="WebContent"
+					 Title="!(loc.WebContentTitle)"
+					 Description="!(loc.WebContentDescription)"
+					 Level="1">
+                
+                <!-- Create folder for ServerUI log file-->
+                <ComponentRef Id="CactusUILogComponent" />
+
+                <!-- ProcessingServer service copy, install and start-->
+                <ComponentRef Id="ProcessingServerComponent" />
+
+                <!-- Changing IP-address in config file from user dialog -->
+                <ComponentRef Id="ModifyInstalledConfigComponent" />
+                <!-- Changing IP-address in config file. IP-address is geting from memory only during reinstallation. -->
+                <ComponentRef Id="ModifyReinstalledConfigComponent" />
+				<!-- To change the server's port -->
+				<ComponentRef Id="ModifyReinstalledConfigComponent2" />
+
+                <ComponentRef Id="RegistryEntries" />
+
+                <!-- Include IIS Configuration.-->
+                <ComponentGroupRef Id="Cactus809WebIssConfiguration" />
+
+                <!-- Web app files -->
+                <ComponentGroupRef Id="group_sui" />
+                <ComponentRef Id="web_config" />
+
+                <!-- Rights for the folder Temporary ASP.NET Files -->
+                <ComponentRef Id="TempASPNETFolderCmp" />
+
+                <ComponentRef Id="AllowFirewallException" />
+
+            </Feature>
+
+            <!-- Main content of the Complete feature. -->
+            <Feature Id="DBContent"
+					 Title="!(loc.CreateDBTitle)"
+					 Description="!(loc.CreateDBDescription)"
+					 Level="1">
+
+                <!-- Create databse -->
+                <ComponentRef Id="SqlComponent"/>
+            </Feature>
+
+            <!-- Main content of the Complete feature. -->
+            <Feature Id="PatchContent"
+					 Title="Patch database"
+					 Description="Patch database"
+					 Level="1"
+                     Display="hidden">
+
+                <!-- Create databse -->
+                <ComponentRef Id="SqlPatchComponent" />
+            </Feature>
+
+            <Feature Id="FeatureShortcutCactusUI" Title="!(loc.ShortcutTitle)" Description="!(loc.ShortcutDescription)" Level="1" ConfigurableDirectory="TARGETDIR">
+                <ComponentRef Id="ShortcutCactus809" />
+                <ComponentRef Id="ShortcutCactusUI"/>
+            </Feature>
+
+        </Feature>
+
+        <CustomAction Id="UpdateWebAppMapping" Directory="WWWROOT"
+              ExeCommand='[ASPNETREGIIS] -norestart -s "W3SVC/1/ROOT/[VIRTUAL_DIR]"' />
+
+        <CustomAction Id="ProtectWebApp1" Directory="WWWROOT" Execute="deferred" Impersonate="no"
+              ExeCommand='[ASPNETREGIIS]  -pe "appSettings" -app "/[VIRTUAL_DIR]" -prov "DataProtectionConfigurationProvider"' />
+        <CustomAction Id="ProtectWebApp2" Directory="WWWROOT" Execute="deferred" Impersonate="no"
+              ExeCommand='[ASPNETREGIIS]  -pe "connectionStrings" -app "/[VIRTUAL_DIR]" -prov "DataProtectionConfigurationProvider"' />
+        <CustomAction Id="ProtectWebApp3" Directory="WWWROOT" Execute="deferred" Impersonate="no"
+              ExeCommand='[ASPNETREGIIS]  -pe "system.web/authentication" -app "/[VIRTUAL_DIR]" -prov "DataProtectionConfigurationProvider"' />
+        <CustomAction Id="ProtectWebApp4" Directory="WWWROOT" Execute="deferred" Impersonate="no"
+              ExeCommand='[ASPNETREGIIS]  -pe "system.web/identity" -app "/[VIRTUAL_DIR]" -prov "DataProtectionConfigurationProvider"' />
+
+        <InstallUISequence>
+            <Custom Action="SetDefaultIPAddress_CustomAction" After="CostFinalize" Overridable="yes">NOT SELFFOUND AND NOT Installed</Custom>
+            <Custom Action="SetXmlConfigFileName_CustomAction" After="CostFinalize"></Custom>
+
+            <!-- Проблема со считыванием из ProcessingServer.exe.config состоит в том, что свойство XMLCONFIG устанавливается раньше,
+                 чем устанавлиается директория [ProcessingServerFolder]. В итоге происходит обращение в пустую директорию.
+                 Поэтому свойство XMLCONFIG устанавливается через SetXmlConfigFileName_CustomAction после того, как [ProcessingServerFolder] устанавливается.
+                 -->
+            <Custom Action="GetIpAddressFromConfig" After="SetXmlConfigFileName_CustomAction">
+                <![CDATA[XMLCONFIG <> ""]]>
+            </Custom>
+            <Custom Action="GetWinUserNameFromWebConfig" After="SetXmlConfigFileName_CustomAction">
+                <![CDATA[WEBXMLCONFIG <> ""]]>
+            </Custom>
+            
+        </InstallUISequence>
+
+        <InstallExecuteSequence>
+            <Custom Action='NoDowngrade' After='FindRelatedProducts'>NEWERFOUND</Custom>
+            <RemoveExistingProducts Before="InstallInitialize" />
+
+            <!-- **************** ПРОВЕРИТЬ, ЧТО и при Before="InstallFiles" проверка будет работать. ***************************
+                 ****************  Подумать, что будет, если при этом произойдет сбой при установке и БД не установится.  ******* -->
+            <Custom Action="CheckLicense_CustomAction" After="CostFinalize">NOT SELFFOUND AND NOT Installed</Custom>
+            <Custom Action="TryToUpdate_CustomAction" After="CostFinalize">SELFFOUND</Custom>
+
+            <Custom Action="GetInternalAddress_CustomAction" After="CheckLicense_CustomAction">NOT SELFFOUND AND NOT Installed</Custom>
+			<Custom Action="GetPort_CustomAction" After="CheckLicense_CustomAction">NOT SELFFOUND AND NOT Installed</Custom>
+            <Custom Action="ActivateLicense_CustomAction" After="GetInternalAddress_CustomAction">NOT SELFFOUND AND NOT Installed</Custom>
+            <Custom Action="WritePasswords_CustomAction" After="GetInternalAddress_CustomAction">NOT SELFFOUND AND NOT Installed</Custom>
+			<Custom Action="GetPasswordHash_CustomAction" After="WritePasswords_CustomAction">NOT SELFFOUND AND NOT Installed</Custom>
+
+            <!-- For IIS 7 everything works without it -->
+            <Custom Action="UpdateWebAppMapping" After="InstallFinalize">
+                <![CDATA[NOT Installed AND ((IIS_MAJOR_VERSION = "#6") OR (IIS_MAJOR_VERSION = "#5"))]]>
+            </Custom>
+            
+            <!-- Do we need to encode web.config?-->
+			<Custom Action="ProtectWebApp1" Before="ProtectWebApp2">ASPNETREGIIS AND NOT Installed AND ENCRYPT_WEB_CONFIG</Custom>
+			<Custom Action="ProtectWebApp2" Before="ProtectWebApp3">ASPNETREGIIS AND NOT Installed AND ENCRYPT_WEB_CONFIG</Custom>
+			<Custom Action="ProtectWebApp3" Before="ProtectWebApp4">ASPNETREGIIS AND NOT Installed AND ENCRYPT_WEB_CONFIG</Custom>
+			<Custom Action="ProtectWebApp4" Before="InstallFinalize">ASPNETREGIIS AND NOT Installed AND ENCRYPT_WEB_CONFIG</Custom>
+
+		</InstallExecuteSequence>
+
+        <!-- Похоже, что так файл не проверишь, причину смотри в комментариях к вызову SetXmlConfigFileName_CustomAction -->
+        <Property Id="XMLCONFIG">
+            <DirectorySearch Id="CheckFileDir" Path="[ProcessingServerFolder]" Depth="0">
+                <FileSearch Id="CheckFile" Name="ProcessingServer.exe.config" />
+            </DirectorySearch>
+        </Property>
+
+        <Property Id="WEBXMLCONFIG">
+            <DirectorySearch Id="CheckWebFileDir" Path="[dir_timeguard_1]" Depth="0">
+                <FileSearch Id="CheckWebConfigFile" Name="web.config" />
+            </DirectorySearch>
+        </Property>
+
+        <!-- Get IP address from old config-file before it will be removed and save to registry -->
+        <Binary Id="GETDATAFROMCONFIG" SourceFile="ReadValueFromXml.vbs" />
+        <CustomAction Id="GetIpAddressFromConfig" BinaryKey="GETDATAFROMCONFIG" VBScriptCall="GetIpAddressFromConfig" Execute="immediate" />
+        <CustomAction Id="GetWinUserNameFromWebConfig" BinaryKey="GETDATAFROMCONFIG" VBScriptCall="GetWinUserNameFromWebConfig" Execute="immediate" />
+
+        <CustomAction Id='NoDowngrade' Error='A later version of [ProductName] is already installed.' />
+
+        <Icon Id="cactus809.ico" SourceFile="cactus809.ico" />
+
+    </Product>
+
+</Wix>

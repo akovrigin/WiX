@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<WixLocalization Culture="ru-ru" xmlns="http://schemas.microsoft.com/wix/2006/localization" Codepage='1251'>
+
+    <!-- Cactus package and components description -->
+
+    <String Id="PackageDescription">Установка клиентской части TimeGuard</String>
+    <String Id="PackageComments">Пакет предназначен для установки клиентской части ПО TimeGuard</String>
+    <String Id="ClientContentTitle">Клиент TimeGuard</String>
+    <String Id="ClientContentDescription">Приложение, сканирующее активность сотрудника по расписанию. Собирает и отсылает статистику на сервер статистики.</String>
+    <String Id="ProductFeatureTitle">Клиент TimeGuard</String>
+    <String Id="ProductFeatureDescription">Клиентская часть ПО TimeGuard</String>
+
+    <!-- Dialog boxes -->
+
+    <String Id="LicenseInformationCaption">Информация о лицензии</String>
+    <String Id="LicenseInformationSuggestion">Укажите следующую информацию для определения лицензии</String>
+    <String Id="LicenseNumber">Номер лицензии</String>
+    <String Id="LicenseKey">Код активации</String>
+
+	<String Id="ProxySettings">Использовать прокси-сервер</String>
+	<String Id="ProxyLogin">Имя пользователя</String>
+	<String Id="YouHaveToUseProxyLogin">Укажите имя пользователя прокси-сервера</String>
+	<String Id="ProxyPassword">Пароль</String>
+	<String Id="YouHaveToUseProxyPassword">Укажите пароль прокси-сервера</String>
+	<String Id="ProxyDescription">Если доступ к интернету осуществляется через прокси-сервер, укажите его настройки</String>
+
+	<!-- System messages -->
+    
+    <String Id="PrereqNetFramework40">Это приложение требует .NET Framework 4.0. Пожалуйста, установите его, после чего запустите установку снова.</String>
+    <String Id="PrereqC2010x86">Это приложение требует Microsoft Visual C++ 2010 Redistributable Package (x86). Пожалуйста, установите его, после чего запустите установку снова.</String>
+    <String Id="PrereqOS">Данная версия Windows не поддерживается. Используйте Windows XP SP3 или выше.</String>
+    <String Id="Example">Пример</String>
+    <String Id="AdminRightsDetectionFailed">Пользователь должен иметь права администратора</String>
+
+    <!-- Others -->
+    <String Id="LicenseRtf" Overridable="yes">License.rtf</String>
+
+    <String Id="ProductLanguage">1049</String>
+    <String Id="ProductCodepage">1251</String>
+    <String Id="SummaryCodepage">1251</String>
+
+</WixLocalization>

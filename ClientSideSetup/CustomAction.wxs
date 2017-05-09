@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+	<Fragment>
+<!--        <Binary Id="SUI_CA.dll"-->
+<!--            SourceFile="$(var.SUI-CustomAction.TargetDir)$(var.SUI-CustomAction.TargetName).CA.dll" />-->
+<!---->
+<!--        <CustomAction Id="CheckLicense_SetDataValue" Execute="immediate" Return="check"-->
+<!--          Property="CheckLicenseProperty" Value="[LICENSE_NUMBER],[LICENSE_KEY]">-->
+<!--        </CustomAction>-->
+<!---->
+<!--        <CustomAction Id="CheckLicense_CustomAction" BinaryKey="SUI_CA.dll"-->
+<!--            DllEntry="CheckLicense" Execute="immediate">-->
+<!--        </CustomAction>-->
+
+    </Fragment>
+</Wix>

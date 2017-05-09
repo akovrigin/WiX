@@ -1,0 +1,134 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>3.5</ProductVersion>
+    <ProjectGuid>{00344cc9-58cf-4e56-8db1-8ed4135184d9}</ProjectGuid>
+    <SchemaVersion>2.0</SchemaVersion>
+    <OutputName>Cactus809SUI</OutputName>
+    <OutputType>Package</OutputType>
+    <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' AND '$(MSBuildExtensionsPath32)' != '' ">$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>
+    <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' ">$(MSBuildExtensionsPath)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>
+    <SccProjectName>$/Cactus-809</SccProjectName>
+    <SccProvider>{4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}</SccProvider>
+    <SccAuxPath>http://tfs:8080/tfs/defaultcollection</SccAuxPath>
+    <SccLocalPath>..</SccLocalPath>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <OutputPath>bin\$(Configuration)\</OutputPath>
+    <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
+    <DefineConstants>Debug;</DefineConstants>
+    <DefineSolutionProperties>false</DefineSolutionProperties>
+    <Cultures>en-US;ru-RU</Cultures>
+    <SuppressPdbOutput>True</SuppressPdbOutput>
+    <WixVariables>
+    </WixVariables>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <OutputPath>bin\$(Configuration)\</OutputPath>
+    <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="CustomAction.wxs" />
+    <Compile Include="DataBase.wxs" />
+    <Compile Include="IISConfiguration.wxs" />
+    <Compile Include="ProcessingServer.wxs" />
+    <Compile Include="Product.wxs" />
+    <Compile Include="Shortcut.wxs" />
+    <Compile Include="suifiles.wxs" />
+    <Compile Include="UIDialogs.wxs" />
+    <Compile Include="WixUI_Cactus.wxs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SUI-CustomAction\SUI-CustomAction.csproj">
+      <Name>SUI-CustomAction</Name>
+      <Project>{d4c8dbd4-4d01-4c72-9ed6-a5ffbc4f6ef3}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLLOCATION</RefTargetDir>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WixExtension Include="WixFirewallExtension">
+      <HintPath>$(WixExtDir)\WixFirewallExtension.dll</HintPath>
+      <Name>WixFirewallExtension</Name>
+    </WixExtension>
+    <WixExtension Include="WixUIExtension">
+      <HintPath>$(WixExtDir)\WixUIExtension.dll</HintPath>
+      <Name>WixUIExtension</Name>
+    </WixExtension>
+    <WixExtension Include="WixSqlExtension">
+      <HintPath>$(WixExtDir)\WixSqlExtension.dll</HintPath>
+      <Name>WixSqlExtension</Name>
+    </WixExtension>
+    <WixExtension Include="WixNetFxExtension">
+      <HintPath>$(WixExtDir)\WixNetFxExtension.dll</HintPath>
+      <Name>WixNetFxExtension</Name>
+    </WixExtension>
+    <WixExtension Include="WixUtilExtension">
+      <HintPath>$(WixExtDir)\WixUtilExtension.dll</HintPath>
+      <Name>WixUtilExtension</Name>
+    </WixExtension>
+    <WixExtension Include="WixIIsExtension">
+      <HintPath>$(WixExtDir)\WixIIsExtension.dll</HintPath>
+      <Name>WixIIsExtension</Name>
+    </WixExtension>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="AllowFirewallException.vbs" />
+    <Content Include="check-login-db.sql" />
+    <Content Include="CheckDBAlreadyExists.sql" />
+    <Content Include="Conditions.wxi" />
+    <Content Include="ConfigurationInitialize.wxi" />
+    <Content Include="cactus809.ico" />
+    <Content Include="create-login-db.sql" />
+    <Content Include="CreateDB.sql" />
+    <Content Include="License-en.rtf" />
+    <Content Include="License.rtf" />
+    <Content Include="Patches.sql" />
+    <Content Include="questions.sql" />
+    <Content Include="ReadValueFromXml.vbs" />
+    <Content Include="Utilites\conpat.exe" />
+    <Content Include="Utilites\DBUpdaterLibrary.dll" />
+    <Content Include="Utilites\Paraffin.exe" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Localization\Cactus809_en-us.wxl" />
+    <EmbeddedResource Include="Localization\Cactus809_ru-ru.wxl" />
+    <EmbeddedResource Include="Localization\FirewallExtension_ru-ru.wxl" />
+    <EmbeddedResource Include="Localization\IIsExtension_ru-ru.wxl" />
+    <EmbeddedResource Include="Localization\SqlExtension_ru-ru.wxl" />
+    <EmbeddedResource Include="Localization\UtilExtension_ru-ru.wxl" />
+    <EmbeddedResource Include="Localization\WixUI_ru-ru.wxl" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Localization" />
+    <Folder Include="Utilites" />
+  </ItemGroup>
+  <Import Project="$(WixTargetsPath)" />
+  <PropertyGroup>
+    <PostBuildEvent />
+  </PropertyGroup>
+  <!--
+	To modify your build process, add your task inside one of the targets below and uncomment it.
+	Other similar extension points exist, see Wix.targets.
+	<Target Name="BeforeBuild">
+	</Target>
+	<Target Name="AfterBuild">
+	</Target>
+	-->
+  <!--
+  <Target Name="AfterBuild">
+    <GetAssemblyIdentity AssemblyFiles="C:\Projects\Cactus-809\ProcessingServer\bin\$(Configuration)\ProcessingServer.exe">
+      <Output TaskParameter="Assemblies" ItemName="AssemblyVersion" />
+    </GetAssemblyIdentity>
+    <Copy SourceFiles=".\bin\$(Configuration)\en-US\$(OutputName).msi" DestinationFiles=".\bin\$(Configuration)\en-US\$(OutputName)_%(AssemblyVersion.Version).msi" />
+    <Delete Files=".\bin\$(Configuration)\en-US\$(OutputName).msi" />
+    <Copy SourceFiles=".\bin\$(Configuration)\ru-ru\$(OutputName).msi" DestinationFiles=".\bin\$(Configuration)\ru-ru\$(OutputName)_%(AssemblyVersion.Version).msi" />
+    <Delete Files=".\bin\$(Configuration)\ru-ru\$(OutputName).msi" />
+  </Target>
+-->
+</Project>

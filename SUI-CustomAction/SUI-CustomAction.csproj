@@ -1,0 +1,76 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{D4C8DBD4-4D01-4C72-9ED6-A5FFBC4F6EF3}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SUI_CustomAction</RootNamespace>
+    <AssemblyName>SUI-CustomAction</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <WixCATargetsPath Condition=" '$(WixCATargetsPath)' == '' ">$(MSBuildExtensionsPath)\Microsoft\WiX\v3.x\Wix.CA.targets</WixCATargetsPath>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Web.Helpers, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.Deployment.WindowsInstaller" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CustomAction.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Content Include="CustomAction.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\InterprocConsts\InterprocConsts.csproj">
+      <Project>{4E712D4E-EF6B-43E7-8518-7F4C58F07DFB}</Project>
+      <Name>InterprocConsts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\LsRas.Access\LsRas.Access.csproj">
+      <Project>{FAF5102B-88F1-4BB7-A6A9-89D263CDD247}</Project>
+      <Name>LsRas.Access</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Mfcom.Cactus.Core\Mfcom.Cactus.Core.csproj">
+      <Project>{10862177-51B1-4F18-96A7-54A4F0AFD815}</Project>
+      <Name>Mfcom.Cactus.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ProcessingServer\ProcessingServer.csproj">
+      <Project>{A8ED84C4-A3D2-4EA5-B6E7-9B29C2271135}</Project>
+      <Name>ProcessingServer</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(WixCATargetsPath)" />
+</Project>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Include>
+    <!-- ****************************** Check prerequisites ******************************-->
+
+    <Property Id="SQLSERVER">
+        <RegistrySearch Id="SQLServer" Root="HKLM" Key="SOFTWARE\Microsoft\Microsoft SQL Server\SQLNCLI10\CurrentVersion" Type="raw" Name="Version" Win64="yes"/>
+    </Property>
+    
+    <!--
+    <![CDATA[SQLSERVER >< MSSQLSERVER]]>
+    10.00.1600.22 - RTM 
+    10.00.2531 - SQL Server 2008 Service Pack 1 
+    10.00.4000 - SQL Server 2008 Service Pack 2 
+    10.50.1600.1 - RTM
+    10.50.2418 - SQL Server 2008 R2 Service Pack 1 CTP
+    -->
+    <Condition Message="!(loc.PrereqMSSQL2008)">
+        <![CDATA[SQLSERVER >= "10"]]>
+    </Condition>
+    
+    <!--Check presence IIS on the user's machine-->
+    <Property Id="IIS_MAJOR_VERSION">
+        <RegistrySearch Id="CheckIISVersion" Root="HKLM" Key="SOFTWARE\Microsoft\InetStp" Name="MajorVersion" Type="raw" />
+    </Property>
+    <Condition Message="!(loc.PrereqIIS)">Installed OR IIS_MAJOR_VERSION</Condition>
+    <!-- IIS Version 6 or higher check. -->
+    <!--<Condition Message="!(loc.IISVersion)">IISMAJORVERSION &gt;= "#6"</Condition>-->
+
+    <!--Check presence .NET Framework 4.0 on the user's machine-->
+    <PropertyRef Id="NETFRAMEWORK40FULL"/>
+    <Condition Message="!(loc.PrereqNetFramework40)">Installed OR NETFRAMEWORK40FULL</Condition>
+
+    <Condition Message='!(loc.PrereqOS)'>(VersionNT = 501 AND ServicePackLevel = 3) OR VersionNT > 501</Condition>
+
+    <!--    ********************* Just for examples of OS requirements *********************-->
+    <!--    <Condition Message='Windows 95'>Version9X = 400</Condition>-->
+    <!--    <Condition Message='Windows 95 OSR2.5'>Version9X = 400 AND WindowsBuild = 1111</Condition>-->
+    <!--    <Condition Message='Windows 98'>Version9X = 410</Condition>-->
+    <!--    <Condition Message='Windows 98 SE'>Version9X = 410 AND WindowsBuild = 2222</Condition>-->
+    <!--    <Condition Message='Windows ME'>Version9X = 490</Condition>-->
+    <!--    <Condition Message='Windows NT4'>VersionNT = 400</Condition>-->
+    <!--    <Condition Message='Windows NT4 SPn'>VersionNT = 400 AND ServicePackLevel = n</Condition>-->
+    <!--    <Condition Message='Windows 2000'>VersionNT = 500</Condition>-->
+    <!--    <Condition Message='Windows 2000 SPn'>VersionNT = 500 AND ServicePackLevel = n</Condition>-->
+    <!--    <Condition Message='Windows XP'>VersionNT = 501</Condition>-->
+    <!--    <Condition Message='Windows XP SPn'>VersionNT = 501 AND ServicePackLevel = n</Condition>-->
+    <!--    <Condition Message='Windows XP Home SPn'>VersionNT = 501 AND MsiNTSuitePersonal AND ServicePackLevel = n</Condition>-->
+    <!--    <Condition Message='Windows Server 2003'>VersionNT = 502</Condition>-->
+    <!--    <Condition Message='Windows Vista'>VersionNT = 600</Condition>-->
+    <!--    <Condition Message='Windows Vista SP1'>VersionNT = 600 AND ServicePackLevel = 1</Condition>-->
+    <!--    <Condition Message='Windows Server 2008'>VersionNT = 600 AND MsiNTProductType = 3</Condition>-->
+    <!--    <Condition Message='Windows 7'>VersionNT = 601</Condition>-->
+
+    <!-- На компьютере Юрия работая под админом эта проверка не дает установить ПО. Странно, но факт. -->
+    <!-- Check that we have elevated permissions if installing -->
+    <!--    <Property Id="MSIUSEREALADMINDETECTION" Value="1" />-->
+    <!--    <Condition Message="!(loc.AdminRightsDetectionFailed)">Installed OR Privileged</Condition>-->
+    <!--<Condition Message="!(loc.AdminRightsDetectionFailed)">Installed OR (Privileged AND AdminUser)</Condition>-->
+
+
+    <!-- RIA Services Check: Cannot just check key - need value, hence v1.0->InstallPath -->
+    <!--<Property Id="RIASERVICES">-->
+    <!--    <RegistrySearch Id="RiaServices" Name="InstallPath" Root="HKLM"-->
+    <!--        Key="SOFTWARE\Microsoft\WCFRIAServices\v1.0" Type="raw" />-->
+    <!--</Property>-->
+    <!--<Condition Message="!(loc.RiaServices)">Installed OR RIASERVICES</Condition>-->
+
+</Include>
